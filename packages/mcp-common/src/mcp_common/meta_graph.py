@@ -6,6 +6,7 @@ plausible, clearly-labelled fixtures so the whole publish/ads flow runs offline
 (MOCK_META_GRAPH=true or no META_APP_ID).
 """
 import asyncio
+import datetime
 import hashlib
 import logging
 import os
@@ -95,6 +96,39 @@ def _mock_id(*parts: str) -> str:
     return str(int(hashlib.sha256("|".join(parts).encode()).hexdigest()[:12], 16))
 
 
+def _mock_insight_row(seed: str, scale: float = 1.0) -> Dict[str, Any]:
+    n = int(_mock_id(seed)) % 1000
+    impressions = int((2500 + n * 9) * scale)
+    reach = int(impressions * 0.72)
+    clicks = int(impressions * (0.011 + (n % 13) / 1000))
+    spend = round(impressions / 1000 * (95 + n % 60), 2)
+    return {
+        "spend": str(spend), "impressions": str(impressions), "reach": str(reach),
+        "frequency": str(round(impressions / max(reach, 1), 2)), "clicks": str(clicks),
+        "inline_link_clicks": str(int(clicks * 0.8)), "ctr": str(round(clicks / max(impressions, 1) * 100, 2)),
+        "cpc": str(round(spend / max(clicks, 1), 2)), "cpm": str(round(spend / max(impressions, 1) * 1000, 2)),
+        "actions": [
+            {"action_type": "link_click", "value": str(int(clicks * 0.8))},
+            {"action_type": "post_engagement", "value": str(int(clicks * 2.4))},
+            {"action_type": "lead", "value": str(max(1, clicks // 18))},
+            {"action_type": "purchase", "value": str(max(1, clicks // 40))},
+        ],
+    }
+
+
+def _mock_insights(campaign_id: str, params: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Plausible, deterministic numbers so the performance panel can be exercised offline."""
+    days = {"today": 1, "yesterday": 1, "last_7d": 7, "last_30d": 14, "maximum": 10}.get(params.get("date_preset"), 10)
+    if params.get("level") == "ad":
+        return [{"ad_id": f"ad_{_mock_id(campaign_id, str(i))}", "ad_name": f"Ad {i + 1} (mock)",
+                 **_mock_insight_row(f"{campaign_id}:{i}", days * (0.6 if i else 0.4))} for i in range(2)]
+    if params.get("time_increment"):
+        today = datetime.date.today()
+        return [{"date_start": (today - datetime.timedelta(days=days - 1 - i)).isoformat(),
+                 **_mock_insight_row(f"{campaign_id}:{i}", 0.6 + (i % 4) * 0.2)} for i in range(days)]
+    return [_mock_insight_row(campaign_id, days)]
+
+
 class MockMetaGraph:
     """Offline stand-in. Every object it returns is tagged so the UI can say 'mock'."""
 
@@ -141,7 +175,17 @@ class MockMetaGraph:
         if method == "GET" and re.match(r"^cont_\w+$", p):
             return {"id": p, "status_code": "FINISHED"}
         if method == "GET" and re.match(r"^media_\w+$", p):
-            return {"id": p, "permalink": f"https://www.instagram.com/p/MOCK{p[-8:].upper()}/"}
+            seed = int(_mock_id(p)) % 97
+            return {"id": p, "permalink": f"https://www.instagram.com/p/MOCK{p[-8:].upper()}/",
+                    "like_count": 120 + seed * 7, "comments_count": 6 + seed % 23}
+        if method == "GET" and re.match(r"^campaign_\w+$", p):
+            return {"id": p, "effective_status": self.statuses.get(p, "ACTIVE")}
+        if method == "GET" and re.match(r"^campaign_\w+/ads$", p):
+            cid = p.split("/")[0]
+            return {"data": [{"id": f"ad_{_mock_id(cid, str(i))}", "name": f"Ad {i + 1} (mock)",
+                              "effective_status": "ACTIVE"} for i in range(2)]}
+        if method == "GET" and re.match(r"^campaign_\w+/insights$", p):
+            return {"data": _mock_insights(p.split("/")[0], params)}
 
         if method == "POST" and p.endswith("/media"):
             return {"id": "cont_" + _mock_id(p, str(params.get("image_url") or params.get("video_url") or params.get("children")))}

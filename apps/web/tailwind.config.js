@@ -14,9 +14,14 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        brand: {
+          DEFAULT: "#80CFAE",
+          hover: "#6FC29F",
+          ink: "#0B1A14",
+        },
         primary: {
-          DEFAULT: "#6366f1",
-          foreground: "#ffffff",
+          DEFAULT: "#80CFAE",
+          foreground: "#0B1A14",
         },
         secondary: {
           DEFAULT: "#1e1b4b",

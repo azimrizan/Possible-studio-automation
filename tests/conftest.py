@@ -8,6 +8,9 @@ os.environ["MOCK_LLM"] = "true"
 # Meta flags are pinned too, so a developer's .env (e.g. MOCK_META_ADS=true) cannot change test behaviour.
 os.environ["MOCK_META_ADS"] = "false"
 os.environ.setdefault("MOCK_META_GRAPH", "true")
+# The video editor calls Claude / ElevenLabs when these are set; blank them so .env keys are never used in tests.
+os.environ["ANTHROPIC_API_KEY"] = ""
+os.environ["ELEVENLABS_API_KEY"] = ""
 
 # Add root paths to sys.path
 sys.path.insert(0, os.path.abspath("."))

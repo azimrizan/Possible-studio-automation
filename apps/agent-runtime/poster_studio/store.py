@@ -16,7 +16,7 @@ from typing import Any, Dict, Optional, Tuple
 WORKSPACE_RE = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 FILENAME_RE = re.compile(r"^[a-f0-9]{32}\.(png|jpg|mp4)$")
 DOC_ID_RE = re.compile(r"^[a-f0-9]{16,32}$")
-COLLECTIONS = {"campaigns"}
+COLLECTIONS = {"campaigns", "reels", "designs"}
 _EXT = {"image/png": "png", "image/jpeg": "jpg", "video/mp4": "mp4"}
 _MIME = {"png": "image/png", "jpg": "image/jpeg", "mp4": "video/mp4"}
 
@@ -116,6 +116,13 @@ class StudioStore:
         if not folder.is_dir():
             return []
         return [json.loads(p.read_text()) for p in sorted(folder.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)]
+
+    def work_dir(self, workspace: str, collection: str, doc_id: str) -> Path:
+        """Scratch folder for one document's intermediate files (audio, frames, render inputs). Never served."""
+        self._doc_path(workspace, collection, doc_id)  # validates collection and id
+        folder = self._ws_dir(workspace) / "work" / collection / doc_id
+        folder.mkdir(parents=True, exist_ok=True)
+        return folder
 
     def load_private(self, workspace: str, name: str) -> Dict[str, Any]:
         """Workspace-level private JSON (e.g. connections with encrypted tokens). Never served over HTTP."""

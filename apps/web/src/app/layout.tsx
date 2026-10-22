@@ -13,8 +13,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="antialiased selection:bg-indigo-500 selection:text-white">
-        <div className="min-h-screen flex flex-col bg-[#080c14] text-slate-100">
+      <body className="antialiased selection:bg-brand selection:text-brand-ink">
+        <div className="min-h-screen flex flex-col bg-[#0c0c0c] text-neutral-100">
           {children}
         </div>
       </body>

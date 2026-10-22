@@ -1,0 +1,29 @@
+{
+  "name": "reel-renderer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Renders AI Video Edit reels from an edit plan (Remotion). Called by the API; not a web app.",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/anek-malayalam": "5.3.0",
+    "@fontsource/bebas-neue": "5.3.0",
+    "@fontsource/dm-serif-display": "5.3.0",
+    "@fontsource/inter": "5.3.0",
+    "@fontsource/noto-sans-malayalam": "5.3.0",
+    "@fontsource/playfair-display": "5.3.0",
+    "@fontsource/poppins": "5.3.0",
+    "@remotion/cli": "4.0.531",
+    "@remotion/layout-utils": "4.0.531",
+    "lucide-react": "0.417.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.531"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "typescript": "5.6.3"
+  }
+}

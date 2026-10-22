@@ -21,8 +21,12 @@ for p in monorepo_paths:
         sys.path.insert(0, p)
 
 # Load repo-level .env into os.environ (adapters read os.getenv); real env vars win.
-from dotenv import load_dotenv
+from dotenv import dotenv_values, load_dotenv
 load_dotenv(root_dir / ".env", override=False)
+# scripts/public_tunnel.py rewrites these in .env and touches this file; a stale shell export must not win.
+for _key, _val in dotenv_values(root_dir / ".env").items():
+    if _key in ("PUBLIC_ASSET_BASE_URL", "META_REDIRECT_BASE_URL") and _val:
+        os.environ[_key] = _val
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,6 +40,8 @@ from .api.mcp_gemini import router as mcp_gemini_router
 from .api.studio import router as studio_router
 from .api.meta_connect import router as meta_connect_router
 from .api.studio_campaigns import router as studio_campaigns_router
+from .api.reel_studio import router as reel_studio_router
+from .api.design_studio import router as design_studio_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -64,6 +70,8 @@ app.include_router(mcp_gemini_router, prefix="/api")
 app.include_router(studio_router, prefix="/api")
 app.include_router(meta_connect_router, prefix="/api")
 app.include_router(studio_campaigns_router, prefix="/api")
+app.include_router(reel_studio_router, prefix="/api")
+app.include_router(design_studio_router, prefix="/api")
 
 @app.get("/health")
 async def health():

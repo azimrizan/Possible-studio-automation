@@ -17,7 +17,7 @@ import secrets
 import time
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, File, Header, HTTPException, UploadFile
+from fastapi import APIRouter, File, Header, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field
 
 import instagram_server
@@ -29,6 +29,7 @@ from mcp_common.meta_graph import MetaGraphError, meta_mock_enabled, meta_mode
 from model_gateway import GroqCallError
 from poster_studio import StoreError, StudioStore
 from poster_studio.imaging import InvalidImageError, is_mp4, normalise_upload, to_instagram_jpeg
+from reel_studio import instagram_ready
 
 from ..core.security import APPROVAL_PUBLIC_KEY_HEX, mint_approval_token
 from .meta_connect import graph_for, mark_needs_reauth
@@ -193,6 +194,51 @@ async def get_campaign(cid: str, x_studio_workspace: Optional[str] = Header(None
     c["connection"] = {k: v for k, v in _selection(ws).items()}
     c["meta_mode"] = meta_mode()
     return c
+
+
+# ---- performance ------------------------------------------------------------------
+
+PERF_TTL_S = 180  # Meta updates insights every few minutes; caching keeps us well under its rate limits
+_perf_cache: Dict[str, Any] = {}
+
+
+@router.get("/campaigns/{cid}/performance")
+async def campaign_performance(cid: str, date_range: str = Query("maximum", alias="range"), refresh: bool = False,
+                               x_studio_workspace: Optional[str] = Header(None)):
+    ws = _ws(x_studio_workspace)
+    c = _load(ws, cid)
+    key = f"{ws}:{cid}:{date_range}"
+    hit = _perf_cache.get(key)
+    if hit and time.time() - hit["at"] < (30 if refresh else PERF_TTL_S):
+        return hit["data"]
+
+    out: Dict[str, Any] = {"ads": None, "instagram": None, "notes": [], "fetched_at": _now()}
+    meta = c.get("meta") or {}
+    if meta.get("mock") and not meta_mock_enabled():
+        out["notes"].append("This campaign was created in demo mode, so there are no real results to show.")
+    elif meta.get("campaign_id"):
+        res = await meta_ads_server.server.execute_tool(ToolCallRequest(
+            tool="ads.insights",
+            arguments={"campaign_id": meta["campaign_id"], "objective": c["strategy"]["plan"]["objective"], "date_preset": date_range},
+            tenant_context=TenantContext(tenant_id=ws, workspace_role="VIEWER"),
+        ))
+        if not res.success:
+            raise HTTPException(status_code=502, detail=f"Could not load ad performance from Meta: {res.error}")
+        out["ads"] = {**res.data, "currency": c["strategy"]["plan"].get("currency", "INR")}
+
+    media_id = (c.get("instagram") or {}).get("media_id")
+    if media_id and not (c.get("instagram") or {}).get("mock"):
+        try:
+            graph = await graph_for(ws)
+            m = await graph.request("GET", media_id, {"fields": "like_count,comments_count,permalink"})
+            out["instagram"] = {"likes": m.get("like_count"), "comments": m.get("comments_count"), "permalink": m.get("permalink")}
+        except MetaGraphError as e:
+            logger.warning(f"[Campaign] instagram stats failed for {cid}: {e}")
+            out["notes"].append("Instagram likes and comments are unavailable: the post may have been deleted, "
+                                "or a different Instagram account is connected now.")
+
+    _perf_cache[key] = {"at": time.time(), "data": out}
+    return out
 
 
 # ---- strategy ---------------------------------------------------------------------
@@ -396,18 +442,23 @@ async def _execute(ws: str, cid: str, publish: bool, build_ads: bool) -> None:
         graph = await graph_for(ws)
         mock = bool(getattr(graph, "mock", False))
 
-        # Instagram-ready JPEG copies of image creatives
+        # Instagram-ready copies: JPEG for images; for videos, audio capped at 128 kbps (Instagram rejects more)
         for x in c["creatives"]:
             if x["kind"] == "image" and not x.get("jpeg_asset_id"):
                 jpeg = to_instagram_jpeg(store.read_asset(ws, x["asset_id"])[0])
                 x["jpeg_asset_id"] = store.save_asset(ws, jpeg, "image/jpeg")["asset_id"]
+            elif x["kind"] == "video" and not x.get("ig_asset_id") and not mock:
+                out = store.work_dir(ws, "campaigns", cid) / f"ig_{x['asset_id']}"
+                await instagram_ready(store.asset_path(ws, x["asset_id"]), out)
+                x["ig_asset_id"] = store.save_asset(ws, out.read_bytes(), "video/mp4")["asset_id"]
+                out.unlink(missing_ok=True)
         _save(ws, c)
 
         if publish and not c.get("instagram"):
             c["status"] = "publishing"
             _event(c, "publish", "running", "Posting to Instagram")
             _save(ws, c)
-            items = [{"url": _public_url(ws, x.get("jpeg_asset_id") or x["asset_id"], mock), "kind": x["kind"]}
+            items = [{"url": _public_url(ws, x.get("jpeg_asset_id") or x.get("ig_asset_id") or x["asset_id"], mock), "kind": x["kind"]}
                      for x in c["creatives"]]
             result = await _call(instagram_server.server, "instagram.publish", ws, {
                 "ig_user_id": sel.get("ig_user_id") or "17841400000000001",

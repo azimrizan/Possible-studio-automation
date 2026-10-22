@@ -13,6 +13,13 @@ dependencies = [
     "httpx>=0.27.0",
     "pyjwt>=2.8.0",
     "cryptography>=42.0.0",
+    "anthropic==0.125.0",  # newest release that still supports Python 3.9 (the venv)
+    "imageio-ffmpeg==0.6.0",  # bundled ffmpeg for the AI Video Edit pipeline
+    # AI Video Edit, Basic mode (free on-server models; install them with scripts/setup_reel_models.sh)
+    "numpy==2.0.2",  # newest release that supports Python 3.9
+    "sherpa-onnx==1.13.8",
+    "soundfile==0.13.1",
+    "onnxruntime==1.19.2",  # newest release that supports Python 3.9
 ]
 
 [tool.pytest.ini_options]

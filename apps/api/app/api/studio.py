@@ -169,7 +169,7 @@ async def upload_product_image(file: UploadFile = File(...), x_studio_workspace:
     return {"asset_id": asset["asset_id"], "url": asset["url"], "width": width, "height": height, "name": file.filename}
 
 
-@router.get("/assets/{workspace}/{filename}")
+@router.api_route("/assets/{workspace}/{filename}", methods=["GET", "HEAD"])  # media fetchers send HEAD first
 async def get_asset(workspace: str, filename: str):
     try:
         path = store.asset_path(workspace, filename)

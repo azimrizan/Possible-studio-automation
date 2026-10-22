@@ -60,10 +60,13 @@ import {
   Info,
   LayoutDashboard,
   Home,
+  Scissors,
 } from "lucide-react";
 import { studioFetch, getStudioWorkspace, CreativeAsset } from "@/lib/studio";
 import CampaignFlow from "@/components/campaign/CampaignFlow";
 import CampaignList from "@/components/campaign/CampaignList";
+import ReelEditStudio from "@/components/reel/ReelEditStudio";
+import DesignStudio from "@/components/design/DesignStudio";
 import MetaConnectCard from "@/components/campaign/MetaConnectCard";
 import CreativeUploader from "@/components/campaign/CreativeUploader";
 interface ProductImage {
@@ -138,7 +141,7 @@ export default function App() {
 
   // Phase 4: Reel & Video Pipeline State
   // Phase 4 & Phase 5 Deliverables Tabs
-  const [activeStudioTab, setActiveStudioTab] = useState<"POSTER" | "REEL" | "REVIEW">("POSTER");
+  const [activeStudioTab, setActiveStudioTab] = useState<"POSTER" | "DESIGN" | "REEL" | "EDIT" | "REVIEW">("POSTER");
   const [isPlayingReel, setIsPlayingReel] = useState(false);
   const [activeReelScene, setActiveReelScene] = useState<1 | 2 | 3 | 4>(1);
   const [selectedAudioTrack, setSelectedAudioTrack] = useState("Cinematic Synth Anthem");
@@ -1009,22 +1012,22 @@ export default function App() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#060913] text-slate-100 font-sans relative overflow-hidden">
+    <div className="flex min-h-screen bg-[#090909] text-neutral-100 font-sans relative overflow-hidden">
       {/* 1. Left Sidebar Matching Image 2 */}
-      <aside className="w-64 border-r border-slate-800/60 bg-[#060913]/90 backdrop-blur-md p-5 flex flex-col justify-between select-none relative overflow-hidden z-10">
+      <aside className="w-64 border-r border-neutral-800/60 bg-[#090909]/90 backdrop-blur-md p-5 flex flex-col justify-between select-none relative overflow-hidden z-10">
         {/* Subtle, reduced-space purple corner glare */}
-        <div className="absolute -bottom-14 -left-10 w-52 h-44 bg-gradient-to-tr from-purple-700/25 via-indigo-600/18 to-transparent blur-2xl rounded-full pointer-events-none" />
+        <div className="absolute -bottom-14 -left-10 w-52 h-44 bg-gradient-to-tr from-brand/12 via-brand/9 to-transparent blur-2xl rounded-full pointer-events-none" />
 
         <div className="relative z-10">
           {/* Logo / Header Matching Image 2 */}
           <div className="flex items-center gap-3.5 mb-8 px-1">
             <div className="relative h-10 w-10 flex items-center justify-center shrink-0">
-              <svg viewBox="0 0 24 24" className="h-8 w-8 drop-shadow-[0_0_12px_rgba(56,189,248,0.7)]" fill="none">
+              <svg viewBox="0 0 24 24" className="h-8 w-8 drop-shadow-[0_0_12px_rgba(128,207,174,0.7)]" fill="none">
                 <defs>
                   <linearGradient id="logoStarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#38bdf8" />
-                    <stop offset="50%" stopColor="#818cf8" />
-                    <stop offset="100%" stopColor="#c084fc" />
+                    <stop offset="0%" stopColor="#B5EBD2" />
+                    <stop offset="50%" stopColor="#80CFAE" />
+                    <stop offset="100%" stopColor="#5DB590" />
                   </linearGradient>
                 </defs>
                 <path
@@ -1035,7 +1038,7 @@ export default function App() {
             </div>
             <div>
               <h1 className="font-extrabold text-[16px] leading-tight text-white tracking-tight">possiblstudio.ai</h1>
-              <span className="text-xs text-slate-400 font-medium">AI Workforce</span>
+              <span className="text-xs text-neutral-400 font-medium">AI Workforce</span>
             </div>
           </div>
 
@@ -1074,8 +1077,8 @@ export default function App() {
                   }}
                   className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-gradient-to-r from-[#2563eb] via-[#4f46e5] to-[#7c3aed] text-white shadow-[0_4px_20px_rgba(79,70,229,0.35)] font-semibold"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"
+                      ? "bg-brand hover:bg-brand-hover text-brand-ink shadow-[0_4px_20px_rgba(128,207,174,0.25)] font-semibold"
+                      : "text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/40"
                   }`}
                 >
                   <Icon className="h-5 w-5 shrink-0" />
@@ -1087,12 +1090,12 @@ export default function App() {
         </div>
 
         {/* Minimal clean status at bottom */}
-        <div className="pt-4 border-t border-slate-800/30 flex items-center justify-between text-[11px] text-slate-500/80 px-1 relative z-10">
+        <div className="pt-4 border-t border-neutral-800/30 flex items-center justify-between text-[11px] text-neutral-500/80 px-1 relative z-10">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>Workspace Active</span>
           </div>
-          <span className="font-mono text-slate-400">v2.1</span>
+          <span className="font-mono text-neutral-400">v2.1</span>
         </div>
       </aside>
 
@@ -1104,11 +1107,11 @@ export default function App() {
           <div>
             <button
               onClick={() => setActiveNav("Brand Kit")}
-              className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl border border-slate-800 bg-[#0c1222]/80 hover:bg-[#11192e] hover:border-slate-700 text-slate-200 transition-all text-xs font-semibold shadow-sm"
+              className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl border border-neutral-800 bg-[#121212]/80 hover:bg-[#191919] hover:border-neutral-700 text-neutral-200 transition-all text-xs font-semibold shadow-sm"
             >
-              <Calendar className="h-4 w-4 text-slate-400" />
+              <Calendar className="h-4 w-4 text-neutral-400" />
               <span>{brandName || "Brand Studio"}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-slate-400 ml-1" />
+              <ChevronDown className="h-3.5 w-3.5 text-neutral-400 ml-1" />
             </button>
           </div>
 
@@ -1116,30 +1119,30 @@ export default function App() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowGeminiModal(true)}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-500/40 bg-[#061826]/80 hover:bg-cyan-950/40 text-cyan-300 text-xs font-medium shadow-[0_0_15px_rgba(6,182,212,0.15)] transition-all group"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-brand/40 bg-brand/10 hover:bg-brand/40 text-brand text-xs font-medium shadow-[0_0_15px_rgba(128,207,174,0.15)] transition-all group"
             >
-              <Sparkles className="h-3.5 w-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
+              <Sparkles className="h-3.5 w-3.5 text-brand group-hover:rotate-12 transition-transform" />
               <span>Gemini connected</span>
             </button>
 
             <button
               onClick={() => setGeminiNoticeMessage("Marketing AI engine is live and ready.")}
-              className="relative p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all"
+              className="relative p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-neutral-800/50 transition-all"
             >
               <Bell className="h-4.5 w-4.5" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-pink-500 ring-2 ring-[#070b14]" />
+              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-pink-500 ring-2 ring-[#0b0b0b]" />
             </button>
 
-            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-indigo-600/30 select-none">
+            <div className="h-8 w-8 rounded-full bg-brand hover:bg-brand-hover flex items-center justify-center text-brand-ink text-xs font-bold shadow-md shadow-brand/20 select-none">
               A
             </div>
           </div>
         </div>
         {metaNotice && (
-          <div className="max-w-6xl w-full mx-auto mb-4 p-3 rounded-xl bg-indigo-950/40 border border-indigo-700/50 text-indigo-200 text-xs flex items-center gap-2.5">
-            <Info className="h-4 w-4 text-indigo-300 shrink-0" />
+          <div className="max-w-6xl w-full mx-auto mb-4 p-3 rounded-xl bg-brand/5 border border-brand/50 text-brand text-xs flex items-center gap-2.5">
+            <Info className="h-4 w-4 text-brand shrink-0" />
             <span className="flex-1">{metaNotice}</span>
-            <button onClick={() => setMetaNotice(null)} className="text-indigo-300 hover:text-white">
+            <button onClick={() => setMetaNotice(null)} className="text-brand hover:text-white">
               <X className="h-3.5 w-3.5" />
             </button>
           </div>
@@ -1164,22 +1167,22 @@ export default function App() {
           <div className="max-w-4xl w-full mx-auto space-y-6">
             <div>
               <h2 className="text-2xl font-bold text-white">Integrations</h2>
-              <p className="text-xs text-slate-400 mt-1">Connect the accounts your AI team posts and advertises with.</p>
+              <p className="text-xs text-neutral-400 mt-1">Connect the accounts your AI team posts and advertises with.</p>
             </div>
             <MetaConnectCard />
-            <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-6 flex items-center justify-between gap-4">
+            <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-6 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <span className="h-9 w-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center">
+                <span className="h-9 w-9 rounded-xl bg-brand hover:bg-brand-hover flex items-center justify-center">
                   <Sparkles className="h-4.5 w-4.5 text-white" />
                 </span>
                 <div>
                   <h3 className="text-sm font-semibold text-white">Google Gemini</h3>
-                  <p className="text-[11px] text-slate-400">Renders posters in Creative Studio</p>
+                  <p className="text-[11px] text-neutral-400">Renders posters in Creative Studio</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowGeminiModal(true)}
-                className="px-4 py-2 rounded-xl border border-slate-700 text-xs font-semibold text-slate-200 hover:border-slate-500"
+                className="px-4 py-2 rounded-xl border border-neutral-700 text-xs font-semibold text-neutral-200 hover:border-neutral-500"
               >
                 Manage
               </button>
@@ -1188,16 +1191,16 @@ export default function App() {
         ) : activeNav === "Brand Kit" || activeNav === "Knowledge" ? (
           /* BRAND KIT TAB — every field optional */
           <div className="max-w-4xl mx-auto space-y-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-neutral-800">
               <div>
                 <button
                   onClick={() => setActiveNav("Marketing")}
-                  className="text-xs text-indigo-400 hover:underline mb-2 flex items-center gap-1"
+                  className="text-xs text-brand hover:underline mb-2 flex items-center gap-1"
                 >
                   ← Back to Dashboard
                 </button>
                 <h2 className="text-2xl font-bold text-white">Brand Kit</h2>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-neutral-400 mt-1">
                   Everything here is optional. Whatever you add, the designer agent uses it for every new poster: your logo goes to Gemini as a reference image.
                 </p>
               </div>
@@ -1206,7 +1209,7 @@ export default function App() {
                 {hasBrandKit && (
                   <button
                     onClick={handleResetBrandKit}
-                    className="px-3.5 py-2 rounded-xl border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 text-xs font-medium transition-all"
+                    className="px-3.5 py-2 rounded-xl border border-neutral-700 text-neutral-300 hover:text-white hover:border-neutral-500 text-xs font-medium transition-all"
                   >
                     Clear all
                   </button>
@@ -1214,7 +1217,7 @@ export default function App() {
                 <button
                   onClick={saveBrandKit}
                   disabled={isSavingBrandKit}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white text-xs font-medium shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
+                  className="px-4 py-2 rounded-xl bg-brand hover:bg-brand-hover disabled:opacity-60 text-brand-ink text-xs font-medium shadow-lg shadow-brand/20 transition-all flex items-center gap-2"
                 >
                   {isSavingBrandKit ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                   <span>{isSavingBrandKit ? "Saving..." : "Save Brand Kit"}</span>
@@ -1223,18 +1226,18 @@ export default function App() {
             </div>
 
             {compileStatus && (
-              <div className="p-3.5 rounded-xl bg-indigo-950/30 border border-indigo-800/50 text-indigo-300 text-xs flex items-center gap-2.5">
-                <Info className="h-4 w-4 text-indigo-400 shrink-0" />
+              <div className="p-3.5 rounded-xl bg-brand/5 border border-brand/50 text-brand text-xs flex items-center gap-2.5">
+                <Info className="h-4 w-4 text-brand shrink-0" />
                 <span>{compileStatus}</span>
               </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Identity & logo */}
-              <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-6 space-y-4">
+              <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                    <Palette className="h-4 w-4 text-indigo-400" />
+                    <Palette className="h-4 w-4 text-brand" />
                     <span>Brand Identity & Logo</span>
                   </h3>
                   {logoUrl && (
@@ -1245,8 +1248,8 @@ export default function App() {
                 </div>
 
                 <div>
-                  <label className="text-xs text-slate-400 block mb-1">
-                    Brand name <span className="text-slate-600">(optional)</span>
+                  <label className="text-xs text-neutral-400 block mb-1">
+                    Brand name <span className="text-neutral-600">(optional)</span>
                   </label>
                   <input
                     type="text"
@@ -1254,14 +1257,14 @@ export default function App() {
                     onChange={(e) => setBrandName(e.target.value)}
                     placeholder="e.g. Crispo"
                     maxLength={80}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand transition-colors"
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs text-slate-400 block">
-                      Logo <span className="text-slate-600">(optional)</span>
+                    <label className="text-xs text-neutral-400 block">
+                      Logo <span className="text-neutral-600">(optional)</span>
                     </label>
                     {logoUrl && (
                       <button
@@ -1275,20 +1278,20 @@ export default function App() {
                   </div>
 
                   {logoUrl ? (
-                    <div className="relative p-4 rounded-xl border border-indigo-500/40 bg-slate-900/90 flex items-center gap-4">
-                      <div className="h-16 w-28 rounded-lg bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:8px_8px] bg-slate-950 border border-slate-800 flex items-center justify-center p-2 overflow-hidden shrink-0 shadow-inner">
+                    <div className="relative p-4 rounded-xl border border-brand/40 bg-neutral-900/90 flex items-center gap-4">
+                      <div className="h-16 w-28 rounded-lg bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:8px_8px] bg-neutral-950 border border-neutral-800 flex items-center justify-center p-2 overflow-hidden shrink-0 shadow-inner">
                         <img src={logoUrl} alt="Brand logo" className="max-h-full max-w-full object-contain" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold text-white truncate">
                           {logoProfile?.reads_as ? `"${logoProfile.reads_as}"` : `${brandName || "Brand"} logo`}
                         </p>
-                        <p className="text-[11px] text-slate-400 mt-0.5">
+                        <p className="text-[11px] text-neutral-400 mt-0.5">
                           {logoProfile
                             ? `${logoProfile.kind} · reads best on ${logoProfile.best_on} backgrounds`
                             : "Passed to Gemini as a reference image"}
                         </p>
-                        <label className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium cursor-pointer mt-2 transition-colors">
+                        <label className="inline-flex items-center gap-1.5 text-xs text-brand hover:text-brand font-medium cursor-pointer mt-2 transition-colors">
                           {isUploadingLogo ? <RefreshCw className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
                           <span>{isUploadingLogo ? "Uploading..." : "Replace logo"}</span>
                           <input
@@ -1305,14 +1308,14 @@ export default function App() {
                       </div>
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-700/80 hover:border-indigo-500/80 rounded-xl bg-slate-900/50 hover:bg-slate-900/80 cursor-pointer transition-all group">
-                      <div className="h-10 w-10 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform mb-2">
+                    <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-neutral-700/80 hover:border-brand/80 rounded-xl bg-neutral-900/50 hover:bg-neutral-900/80 cursor-pointer transition-all group">
+                      <div className="h-10 w-10 rounded-xl bg-brand/10 border border-brand/30 flex items-center justify-center text-brand group-hover:scale-110 transition-transform mb-2">
                         {isUploadingLogo ? <RefreshCw className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
                       </div>
-                      <p className="text-xs font-semibold text-slate-200 group-hover:text-white transition-colors">
+                      <p className="text-xs font-semibold text-neutral-200 group-hover:text-white transition-colors">
                         {isUploadingLogo ? "Uploading & analysing..." : "Click to upload your logo"}
                       </p>
-                      <p className="text-[11px] text-slate-500 mt-1">
+                      <p className="text-[11px] text-neutral-500 mt-1">
                         PNG with transparent background works best · JPG / WebP OK · max 10 MB
                       </p>
                       <input
@@ -1331,14 +1334,14 @@ export default function App() {
               </div>
 
               {/* Colours */}
-              <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-6 space-y-4">
+              <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-6 space-y-4">
                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                  <Palette className="h-4 w-4 text-pink-400" />
+                  <Palette className="h-4 w-4 text-brand" />
                   <span>
-                    Brand colours <span className="text-xs font-normal text-slate-500">(optional)</span>
+                    Brand colours <span className="text-xs font-normal text-neutral-500">(optional)</span>
                   </span>
                 </h3>
-                <p className="text-[11px] text-slate-500 -mt-2">
+                <p className="text-[11px] text-neutral-500 -mt-2">
                   Leave empty to let the designer pick a palette from your product.
                 </p>
                 <div className="grid grid-cols-3 gap-3">
@@ -1348,20 +1351,20 @@ export default function App() {
                     ["Accent", accentColor, setAccentColor],
                   ] as Array<[string, string, (v: string) => void]>).map(([label, value, setter]) => (
                     <div key={label}>
-                      <label className="text-[11px] text-slate-400 block mb-1">{label}</label>
-                      <div className="flex items-center gap-2 p-2 rounded-xl bg-slate-900 border border-slate-800">
+                      <label className="text-[11px] text-neutral-400 block mb-1">{label}</label>
+                      <div className="flex items-center gap-2 p-2 rounded-xl bg-neutral-900 border border-neutral-800">
                         <input
                           type="color"
                           value={value || "#000000"}
                           onChange={(e) => setter(e.target.value)}
                           className={`h-6 w-6 rounded border-0 bg-transparent cursor-pointer ${value ? "" : "opacity-30"}`}
                         />
-                        <span className="text-[11px] font-mono text-slate-300 flex-1">{value || "Not set"}</span>
+                        <span className="text-[11px] font-mono text-neutral-300 flex-1">{value || "Not set"}</span>
                         {value && (
                           <button
                             type="button"
                             onClick={() => setter("")}
-                            className="text-slate-500 hover:text-rose-400"
+                            className="text-neutral-500 hover:text-rose-400"
                             title="Clear colour"
                           >
                             <X className="h-3 w-3" />
@@ -1374,34 +1377,34 @@ export default function App() {
               </div>
 
               {/* Voice */}
-              <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-6 space-y-4 md:col-span-2">
+              <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-6 space-y-4 md:col-span-2">
                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4 text-cyan-400" />
+                  <MessageSquare className="h-4 w-4 text-brand" />
                   <span>
-                    Voice <span className="text-xs font-normal text-slate-500">(optional)</span>
+                    Voice <span className="text-xs font-normal text-neutral-500">(optional)</span>
                   </span>
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs text-slate-400 block mb-1">Tone of voice</label>
+                    <label className="text-xs text-neutral-400 block mb-1">Tone of voice</label>
                     <input
                       type="text"
                       value={toneKeywords}
                       onChange={(e) => setToneKeywords(e.target.value)}
                       placeholder="e.g. warm, witty, premium"
                       maxLength={200}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-slate-400 block mb-1">Tagline</label>
+                    <label className="text-xs text-neutral-400 block mb-1">Tagline</label>
                     <input
                       type="text"
                       value={brandTagline}
                       onChange={(e) => setBrandTagline(e.target.value)}
                       placeholder="e.g. Crunch without the guilt"
                       maxLength={120}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand transition-colors"
                     />
                   </div>
                 </div>
@@ -1420,7 +1423,7 @@ export default function App() {
                     setCurrentStep("01_DASHBOARD");
                     setActiveNav("Overview");
                   }}
-                  className="h-11 w-11 rounded-full border border-slate-700/80 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition-all shadow-md group shrink-0"
+                  className="h-11 w-11 rounded-full border border-neutral-700/80 bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white flex items-center justify-center transition-all shadow-md group shrink-0"
                   title="Back to Dashboard"
                 >
                   <ArrowLeft className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
@@ -1428,9 +1431,9 @@ export default function App() {
                 <div>
                   <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-2">
                     <span>Creative</span>
-                    <span className="text-[#8b5cf6]">Studio</span>
+                    <span className="text-brand">Studio</span>
                   </h1>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-1 font-normal">
+                  <p className="text-xs sm:text-sm text-neutral-400 mt-1 font-normal">
                     AI is creating stunning posters and reels from your brief.
                   </p>
                 </div>
@@ -1439,21 +1442,21 @@ export default function App() {
               {/* Right: 3D Laptop Robot overlapping down behind the Poster Studio layer matching Image 2 */}
               <div className="relative shrink-0 flex items-end justify-center sm:justify-end self-end pointer-events-none w-full sm:w-[420px] lg:w-[460px]">
                 {/* Volumetric Aurora Ambient Lighting Rays matching Image 2 */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[340px] bg-gradient-to-br from-indigo-600/30 via-purple-600/25 to-blue-500/20 blur-3xl rounded-full pointer-events-none" />
-                <div className="absolute top-6 left-1/4 w-52 h-44 bg-cyan-400/20 blur-2xl rounded-full pointer-events-none" />
-                <div className="absolute bottom-6 right-6 w-60 h-48 bg-fuchsia-600/20 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[340px] bg-gradient-to-br from-brand/15 via-brand/12 to-brand/10 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute top-6 left-1/4 w-52 h-44 bg-brand/20 blur-2xl rounded-full pointer-events-none" />
+                <div className="absolute bottom-6 right-6 w-60 h-48 bg-brand/10 blur-3xl rounded-full pointer-events-none" />
 
                 {/* Floating Neon Sparkles matching Image 2 */}
-                <div className="absolute left-6 top-10 text-cyan-300 text-2xl select-none animate-pulse pointer-events-none drop-shadow-[0_0_12px_rgba(103,232,249,0.9)]">
+                <div className="absolute left-6 top-10 text-brand text-2xl select-none animate-pulse pointer-events-none drop-shadow-[0_0_12px_rgba(128,207,174,0.9)]">
                   ✦
                 </div>
-                <div className="absolute left-16 top-24 text-sky-400 text-xl select-none pointer-events-none drop-shadow-[0_0_10px_rgba(56,189,248,0.85)]">
+                <div className="absolute left-16 top-24 text-brand text-xl select-none pointer-events-none drop-shadow-[0_0_10px_rgba(128,207,174,0.85)]">
                   ✦
                 </div>
-                <div className="absolute right-10 top-12 text-fuchsia-400 text-2xl select-none pointer-events-none drop-shadow-[0_0_12px_rgba(232,121,249,0.9)]">
+                <div className="absolute right-10 top-12 text-brand text-2xl select-none pointer-events-none drop-shadow-[0_0_12px_rgba(128,207,174,0.9)]">
                   ✦
                 </div>
-                <div className="absolute right-6 bottom-20 text-fuchsia-400 text-lg select-none pointer-events-none drop-shadow-[0_0_8px_rgba(232,121,249,0.8)]">
+                <div className="absolute right-6 bottom-20 text-brand text-lg select-none pointer-events-none drop-shadow-[0_0_8px_rgba(128,207,174,0.8)]">
                   ✦
                 </div>
 
@@ -1477,8 +1480,8 @@ export default function App() {
                     onClick={() => setActiveStudioTab("POSTER")}
                     className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                       activeStudioTab === "POSTER"
-                        ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/35"
-                        : "text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800/80"
+                        ? "bg-brand hover:bg-brand-hover text-brand-ink shadow-lg shadow-brand/20"
+                        : "text-neutral-400 hover:text-white bg-neutral-900/60 border border-neutral-800/80"
                     }`}
                   >
                     <ImageIcon className="h-4 w-4" />
@@ -1487,15 +1490,41 @@ export default function App() {
 
                   <button
                     type="button"
+                    onClick={() => setActiveStudioTab("DESIGN")}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                      activeStudioTab === "DESIGN"
+                        ? "bg-brand hover:bg-brand-hover text-brand-ink shadow-lg shadow-brand/20"
+                        : "text-neutral-400 hover:text-white bg-neutral-900/60 border border-neutral-800/80"
+                    }`}
+                  >
+                    <Palette className="h-4 w-4" />
+                    <span>AI Design</span>
+                  </button>
+
+                  <button
+                    type="button"
                     onClick={() => setActiveStudioTab("REEL")}
                     className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                       activeStudioTab === "REEL"
-                        ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-600/35"
-                        : "text-slate-400 hover:text-white bg-slate-900/60 border border-slate-800/80"
+                        ? "bg-brand hover:bg-brand-hover text-brand-ink shadow-lg shadow-brand/20"
+                        : "text-neutral-400 hover:text-white bg-neutral-900/60 border border-neutral-800/80"
                     }`}
                   >
                     <Film className="h-4 w-4" />
                     <span>Reel Studio</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveStudioTab("EDIT")}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                      activeStudioTab === "EDIT"
+                        ? "bg-brand hover:bg-brand-hover text-brand-ink shadow-lg shadow-brand/20"
+                        : "text-neutral-400 hover:text-white bg-neutral-900/60 border border-neutral-800/80"
+                    }`}
+                  >
+                    <Scissors className="h-4 w-4" />
+                    <span>AI Video Edit</span>
                   </button>
                 </div>
 
@@ -1507,8 +1536,8 @@ export default function App() {
                     title={hasBrandKit ? "Use your saved brand kit for the next generation" : "No brand kit saved yet"}
                     className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
                       useBrandKit && hasBrandKit
-                        ? "border-indigo-500/60 bg-indigo-950/40 text-indigo-200"
-                        : "border-slate-800 bg-slate-900/80 text-slate-400"
+                        ? "border-brand/60 bg-brand/5 text-brand"
+                        : "border-neutral-800 bg-neutral-900/80 text-neutral-400"
                     }`}
                   >
                     <Palette className="h-3.5 w-3.5" />
@@ -1520,9 +1549,9 @@ export default function App() {
                     type="button"
                     onClick={() => handleRegenerateCreatives()}
                     disabled={isRegeneratingCreative}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 transition-all disabled:opacity-60 shadow-sm"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-neutral-300 hover:text-white bg-neutral-900/80 hover:bg-neutral-850 border border-neutral-800 hover:border-neutral-700 transition-all disabled:opacity-60 shadow-sm"
                   >
-                    <RefreshCw className={`h-3.5 w-3.5 ${isRegeneratingCreative ? "animate-spin text-purple-400" : ""}`} />
+                    <RefreshCw className={`h-3.5 w-3.5 ${isRegeneratingCreative ? "animate-spin text-brand" : ""}`} />
                     <span>{isRegeneratingCreative ? "Designing new concepts..." : "Generate more"}</span>
                   </button>
                 </div>
@@ -1547,39 +1576,39 @@ export default function App() {
                     {[1, 2, 3].map((i) => (
                       <div
                         key={i}
-                        className="h-[470px] rounded-2xl border border-purple-500/20 bg-[#0b101e] p-6 flex flex-col justify-between relative overflow-hidden shadow-xl"
+                        className="h-[470px] rounded-2xl border border-brand/20 bg-[#101010] p-6 flex flex-col justify-between relative overflow-hidden shadow-xl"
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/5 to-transparent animate-[shimmer_2s_infinite]" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand/5 to-transparent animate-[shimmer_2s_infinite]" />
                         
                         {/* Top checkmark placeholder */}
                         <div className="flex justify-end z-10">
-                          <div className="h-7 w-7 rounded-full bg-slate-800/60 animate-pulse" />
+                          <div className="h-7 w-7 rounded-full bg-neutral-800/60 animate-pulse" />
                         </div>
 
                         {/* Center: 3D Typing Robot with Zoom In/Out Animation */}
                         <div className="flex flex-col items-center justify-center z-10 my-auto py-2">
                           <div className="relative flex items-center justify-center">
                             {/* Aurora Glow */}
-                            <div className="absolute w-36 h-36 bg-gradient-to-tr from-indigo-500/30 via-purple-500/25 to-cyan-400/20 blur-2xl rounded-full animate-pulse" />
+                            <div className="absolute w-36 h-36 bg-gradient-to-tr from-brand/15 via-brand/12 to-brand/20 blur-2xl rounded-full animate-pulse" />
                             <img
                               src="/robot_loading.png"
                               alt="AI Robot Generating..."
                               className="relative z-10 w-32 h-32 sm:w-36 sm:h-36 object-contain select-none pointer-events-none animate-robot-zoom"
                             />
                           </div>
-                          <p className="text-xs font-semibold text-slate-300 mt-3 flex items-center gap-1.5">
-                            <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-ping" />
+                          <p className="text-xs font-semibold text-neutral-300 mt-3 flex items-center gap-1.5">
+                            <span className="h-1.5 w-1.5 rounded-full bg-brand animate-ping" />
                             Synthesizing Poster #{i}...
                           </p>
                         </div>
 
                         {/* Skeleton Footer Controls Bar */}
-                        <div className="flex items-center justify-between z-10 pt-4 border-t border-slate-800/60">
+                        <div className="flex items-center justify-between z-10 pt-4 border-t border-neutral-800/60">
                           <div className="flex gap-2">
-                            <div className="h-8 w-8 rounded-xl bg-slate-800/60 animate-pulse" />
-                            <div className="h-8 w-8 rounded-xl bg-slate-800/60 animate-pulse" />
+                            <div className="h-8 w-8 rounded-xl bg-neutral-800/60 animate-pulse" />
+                            <div className="h-8 w-8 rounded-xl bg-neutral-800/60 animate-pulse" />
                           </div>
-                          <div className="h-8 w-16 rounded-xl bg-slate-800/60 animate-pulse" />
+                          <div className="h-8 w-16 rounded-xl bg-neutral-800/60 animate-pulse" />
                         </div>
                       </div>
                     ))}
@@ -1587,12 +1616,12 @@ export default function App() {
                 </div>
               ) : variantsData.length === 0 ? (
                 /* Empty State Before First Generation (Matching Image 2) */
-                <div className="relative z-20 w-full rounded-2xl border border-indigo-500/30 bg-[#070b1a]/95 backdrop-blur-xl shadow-[0_0_50px_rgba(30,41,89,0.25)] p-12 sm:p-16 text-center space-y-5">
-                  <div className="h-16 w-16 rounded-2xl bg-gradient-to-b from-indigo-500/20 to-purple-600/15 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-300 shadow-lg shadow-indigo-950/50">
-                    <ImageIcon className="h-8 w-8 text-indigo-300" />
+                <div className="relative z-20 w-full rounded-2xl border border-brand/30 bg-[#0b0b0b]/95 backdrop-blur-xl shadow-[0_0_50px_rgba(128,207,174,0.25)] p-12 sm:p-16 text-center space-y-5">
+                  <div className="h-16 w-16 rounded-2xl bg-gradient-to-b from-brand/10 to-brand/7 border border-brand/30 flex items-center justify-center mx-auto text-brand shadow-lg shadow-brand/20">
+                    <ImageIcon className="h-8 w-8 text-brand" />
                   </div>
                   <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">No creatives generated yet</h3>
-                  <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+                  <p className="text-xs sm:text-sm text-neutral-400 max-w-xl mx-auto leading-relaxed">
                     Tell your AI marketing team what you want to achieve on the Overview page or click &ldquo;Generate more&rdquo; to synthesize high-converting visuals tailored 100% to your product.
                   </p>
                   <button
@@ -1600,7 +1629,7 @@ export default function App() {
                       setCurrentStep("01_DASHBOARD");
                       setActiveNav("Overview");
                     }}
-                    className="px-7 py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-xs sm:text-sm font-semibold text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center gap-2"
+                    className="px-7 py-3 rounded-xl bg-brand hover:bg-brand-hover text-xs sm:text-sm font-semibold text-brand-ink shadow-lg shadow-brand/20 hover:shadow-brand/20 hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center gap-2"
                   >
                     <span>Open campaign prompt</span>
                     <ArrowRight className="h-4 w-4" />
@@ -1616,10 +1645,10 @@ export default function App() {
                         <div
                           key={variant.index}
                           onClick={() => toggleCardSelection(variant.index)}
-                          className={`group relative h-[470px] rounded-2xl overflow-hidden border transition-all duration-300 cursor-pointer flex flex-col justify-between p-5 bg-[#0b101e] shadow-xl ${
+                          className={`group relative h-[470px] rounded-2xl overflow-hidden border transition-all duration-300 cursor-pointer flex flex-col justify-between p-5 bg-[#101010] shadow-xl ${
                             isSelected
-                              ? "border-indigo-500/80 shadow-[0_0_30px_rgba(99,102,241,0.3)] ring-1 ring-indigo-500/50"
-                              : "border-slate-800/90 hover:border-slate-700/80 hover:shadow-lg"
+                              ? "border-brand/80 shadow-[0_0_30px_rgba(128,207,174,0.15)] ring-1 ring-brand/50"
+                              : "border-neutral-800/90 hover:border-neutral-700/80 hover:shadow-lg"
                           }`}
                         >
                           {/* Gemini-rendered poster; failures are shown honestly instead of a fake fallback */}
@@ -1630,17 +1659,17 @@ export default function App() {
                               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                           ) : (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-8 text-center bg-[#0b101e]">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-8 text-center bg-[#101010]">
                               <AlertTriangle className="h-8 w-8 text-amber-400" />
                               <p className="text-sm font-semibold text-white">This poster could not be rendered</p>
-                              <p className="text-[11px] text-slate-400 line-clamp-4">{variant.error || "Image generation failed."}</p>
+                              <p className="text-[11px] text-neutral-400 line-clamp-4">{variant.error || "Image generation failed."}</p>
                               <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleRegenerateVariant(variant, "");
                                 }}
-                                className="mt-1 px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white"
+                                className="mt-1 px-3.5 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white"
                               >
                                 Retry
                               </button>
@@ -1649,8 +1678,8 @@ export default function App() {
 
                           {regeneratingIndex === variant.index && (
                             <div className="absolute inset-0 z-20 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center gap-2">
-                              <RefreshCw className="h-6 w-6 text-purple-300 animate-spin" />
-                              <span className="text-xs text-slate-200">Re-rendering…</span>
+                              <RefreshCw className="h-6 w-6 text-brand animate-spin" />
+                              <span className="text-xs text-neutral-200">Re-rendering…</span>
                             </div>
                           )}
 
@@ -1676,8 +1705,8 @@ export default function App() {
                               }}
                               className={`h-7 w-7 rounded-full flex items-center justify-center transition-all shrink-0 ${
                                 isSelected
-                                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/60 ring-2 ring-indigo-400/50"
-                                  : "bg-black/50 backdrop-blur-md text-slate-400 border border-white/20 hover:border-white/50"
+                                  ? "bg-brand text-brand-ink shadow-lg shadow-brand/20 ring-2 ring-brand/50"
+                                  : "bg-black/50 backdrop-blur-md text-neutral-400 border border-white/20 hover:border-white/50"
                               }`}
                             >
                               <Check className="h-4 w-4 stroke-[3]" />
@@ -1692,7 +1721,7 @@ export default function App() {
                             <div className="flex items-center gap-2">
                               <button
                                 type="button"
-                                className="p-2 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-700/80 text-slate-300 hover:text-white hover:bg-slate-800 transition-all"
+                                className="p-2 rounded-xl bg-neutral-900/80 backdrop-blur-md border border-neutral-700/80 text-neutral-300 hover:text-white hover:bg-neutral-800 transition-all"
                                 title="Aspect Ratio"
                               >
                                 <Layers className="h-3.5 w-3.5" />
@@ -1700,7 +1729,7 @@ export default function App() {
                               <button
                                 type="button"
                                 onClick={() => setExpandedCard(variant)}
-                                className="p-2 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-700/80 text-slate-300 hover:text-white hover:bg-slate-800 transition-all"
+                                className="p-2 rounded-xl bg-neutral-900/80 backdrop-blur-md border border-neutral-700/80 text-neutral-300 hover:text-white hover:bg-neutral-800 transition-all"
                                 title="Fullscreen Expand"
                               >
                                 <Maximize2 className="h-3.5 w-3.5" />
@@ -1710,7 +1739,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={() => setEditingCard(variant)}
-                              className="px-3.5 py-1.5 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-700/80 hover:bg-slate-850 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
+                              className="px-3.5 py-1.5 rounded-xl bg-neutral-900/80 backdrop-blur-md border border-neutral-700/80 hover:bg-neutral-850 text-xs font-semibold text-neutral-300 hover:text-white transition-all shadow-sm"
                             >
                               Edit
                             </button>
@@ -1721,9 +1750,9 @@ export default function App() {
                   </div>
 
                   {/* Sticky Bottom Selection Tray */}
-                  <div className="fixed bottom-4 left-4 sm:left-72 right-4 sm:right-8 z-40 bg-[#090d1a]/95 backdrop-blur-xl border border-slate-800/90 rounded-2xl p-4 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="fixed bottom-4 left-4 sm:left-72 right-4 sm:right-8 z-40 bg-[#0d0d0d]/95 backdrop-blur-xl border border-neutral-800/90 rounded-2xl p-4 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-4">
-                      <span className="text-sm font-semibold text-cyan-400">
+                      <span className="text-sm font-semibold text-brand">
                         {selectedCardIndices.length} creatives selected
                       </span>
                       <div className="flex items-center gap-2 overflow-x-auto max-w-[280px]">
@@ -1732,7 +1761,7 @@ export default function App() {
                           .map((v) => (
                             <div
                               key={v.index}
-                              className="h-11 w-8 rounded-lg overflow-hidden border border-indigo-500/60 relative shadow-sm shrink-0"
+                              className="h-11 w-8 rounded-lg overflow-hidden border border-brand/60 relative shadow-sm shrink-0"
                             >
                               <img
                                 src={v.bgUrl || undefined}
@@ -1748,7 +1777,7 @@ export default function App() {
                       type="button"
                       onClick={handleContinueToCampaign}
                       disabled={isCreatingCampaign || selectedCardIndices.length === 0}
-                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                      className="px-6 py-2.5 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink text-xs font-semibold shadow-lg shadow-brand/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                     >
                       <span>{isCreatingCampaign ? "Starting…" : "Continue to Campaign Settings"}</span>
                       <ArrowRight className="h-4 w-4" />
@@ -1756,21 +1785,25 @@ export default function App() {
                   </div>
                 </div>
               )
+            ) : activeStudioTab === "DESIGN" ? (
+              <DesignStudio getGeminiAuth={getGeminiAuth} />
+            ) : activeStudioTab === "EDIT" ? (
+              <ReelEditStudio />
             ) : activeStudioTab === "REEL" ? (
 
               /* REEL VIDEO STUDIO (PHASE 4) */
               !activeSceneData || reelScenesData.length === 0 ? (
-                <div className="rounded-3xl border border-slate-800 bg-[#0a101f] p-12 text-center space-y-4">
-                  <div className="h-14 w-14 rounded-2xl bg-purple-600/10 border border-purple-500/20 flex items-center justify-center mx-auto text-purple-400">
+                <div className="rounded-3xl border border-neutral-800 bg-[#101010] p-12 text-center space-y-4">
+                  <div className="h-14 w-14 rounded-2xl bg-brand/10 border border-brand/20 flex items-center justify-center mx-auto text-brand">
                     <Film className="h-7 w-7" />
                   </div>
                   <h3 className="text-base font-bold text-white">No Reel Storyboard Generated Yet</h3>
-                  <p className="text-xs text-slate-400 max-w-md mx-auto">
+                  <p className="text-xs text-neutral-400 max-w-md mx-auto">
                     Start a campaign with Reel deliverables enabled to auto-compose a 4-scene kinetic storyboard with audio cues and motion typography using Gemini MCP (Veo 2).
                   </p>
                   <button
                     onClick={() => setCurrentStep("01_DASHBOARD")}
-                    className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-semibold text-white shadow-lg shadow-purple-600/20 transition-all inline-flex items-center gap-2"
+                    className="px-5 py-2.5 rounded-xl bg-brand hover:bg-brand-hover text-xs font-semibold text-brand-ink shadow-lg shadow-brand/20 transition-all inline-flex items-center gap-2"
                   >
                     <span>Open Campaign Prompt</span>
                     <ArrowRight className="h-4 w-4" />
@@ -1779,15 +1812,15 @@ export default function App() {
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                   {/* Left Column: Mobile Smartphone Viewport Video Mockup */}
-                  <div className="lg:col-span-5 rounded-3xl border border-slate-800 bg-[#0a101f] p-6 space-y-4 shadow-2xl flex flex-col items-center">
-                    <div className="w-full flex items-center justify-between pb-3 border-b border-slate-800/80 text-xs">
+                  <div className="lg:col-span-5 rounded-3xl border border-neutral-800 bg-[#101010] p-6 space-y-4 shadow-2xl flex flex-col items-center">
+                    <div className="w-full flex items-center justify-between pb-3 border-b border-neutral-800/80 text-xs">
                       <div className="flex items-center gap-2">
-                        <span className="text-slate-400 font-medium">Format:</span>
-                        <span className="text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded font-mono border border-purple-500/20">
+                        <span className="text-neutral-400 font-medium">Format:</span>
+                        <span className="text-brand bg-brand/10 px-2 py-0.5 rounded font-mono border border-brand/20">
                           9:16 Vertical Reel
                         </span>
-                        <span className="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-mono flex items-center gap-1 shadow-sm">
-                          <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                        <span className="text-[10px] bg-brand/10 text-brand border border-brand/30 px-2 py-0.5 rounded-full font-mono flex items-center gap-1 shadow-sm">
+                          <span className="h-1.5 w-1.5 rounded-full bg-brand animate-pulse"></span>
                           Gemini MCP: Veo 2
                         </span>
                       </div>
@@ -1798,10 +1831,10 @@ export default function App() {
                     </div>
 
                     {/* Smartphone Frame */}
-                    <div className="w-full max-w-[320px] aspect-[9/16] rounded-[36px] p-3 bg-[#0d1322] border-4 border-slate-800 shadow-2xl relative flex flex-col justify-between overflow-hidden">
+                    <div className="w-full max-w-[320px] aspect-[9/16] rounded-[36px] p-3 bg-[#131313] border-4 border-neutral-800 shadow-2xl relative flex flex-col justify-between overflow-hidden">
                       {/* Phone Camera Notch / Dynamic Island */}
                       <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-5 rounded-full bg-black z-30 flex items-center justify-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-slate-900 ml-12" />
+                        <div className="h-2.5 w-2.5 rounded-full bg-neutral-900 ml-12" />
                       </div>
 
                       {/* Active Scene Video Frame */}
@@ -1813,14 +1846,14 @@ export default function App() {
                             className="w-full h-full object-cover transition-all duration-700 scale-105"
                           />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-b from-[#090d16] via-[#101728] to-[#050811] flex flex-col items-center justify-center p-6 text-center">
-                            <div className="h-14 w-14 rounded-2xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center mb-3 text-purple-400">
+                          <div className="w-full h-full bg-gradient-to-b from-[#0d0d0d] via-[#171717] to-[#080808] flex flex-col items-center justify-center p-6 text-center">
+                            <div className="h-14 w-14 rounded-2xl bg-brand/10 border border-brand/30 flex items-center justify-center mb-3 text-brand">
                               <Film className="h-7 w-7" />
                             </div>
-                            <span className="text-xs font-mono text-purple-300 font-semibold mb-1">
+                            <span className="text-xs font-mono text-brand font-semibold mb-1">
                               {activeSceneData.duration} Dynamic Motion Cut
                             </span>
-                            <span className="text-[11px] text-slate-400 max-w-[200px] line-clamp-3">
+                            <span className="text-[11px] text-neutral-400 max-w-[200px] line-clamp-3">
                               {activeSceneData.visual}
                             </span>
                           </div>
@@ -1831,7 +1864,7 @@ export default function App() {
                     {/* Top Status & Brand Overlay */}
                     <div className="relative z-20 pt-8 px-3 flex items-center justify-between text-[11px] text-white">
                       <div className="flex items-center gap-1.5 font-bold tracking-wider">
-                        <span className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
+                        <span className="h-2 w-2 rounded-full bg-brand animate-pulse" />
                         <span>{brandName.toUpperCase()}</span>
                       </div>
                       <span className="text-[10px] bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/10 font-mono">
@@ -1841,13 +1874,13 @@ export default function App() {
 
                     {/* On-Screen Kinetic Highlight Captions */}
                     <div className="relative z-20 px-4 py-8 text-center space-y-2">
-                      <span className="text-[10px] uppercase font-mono tracking-widest text-indigo-300 bg-indigo-950/80 px-2.5 py-1 rounded-full border border-indigo-500/30 inline-block">
+                      <span className="text-[10px] uppercase font-mono tracking-widest text-brand bg-brand/5 px-2.5 py-1 rounded-full border border-brand/30 inline-block">
                         {activeSceneData.title}
                       </span>
                       <h3 className="text-xl font-black text-white leading-tight uppercase drop-shadow-lg tracking-wide">
                         {activeSceneData.caption}
                       </h3>
-                      <p className="text-[11px] text-slate-300 font-medium italic drop-shadow line-clamp-2">
+                      <p className="text-[11px] text-neutral-300 font-medium italic drop-shadow line-clamp-2">
                         "{activeSceneData.voiceover}"
                       </p>
                     </div>
@@ -1855,12 +1888,12 @@ export default function App() {
                     {/* Bottom Controls & Playback Scrubber */}
                     <div className="relative z-20 pb-4 px-3 space-y-2.5">
                       {/* Audio cue info badge */}
-                      <div className="flex items-center justify-between text-[10px] text-slate-300 bg-black/60 backdrop-blur-md p-1.5 rounded-xl border border-white/10">
+                      <div className="flex items-center justify-between text-[10px] text-neutral-300 bg-black/60 backdrop-blur-md p-1.5 rounded-xl border border-white/10">
                         <div className="flex items-center gap-1.5 truncate">
-                          <Music className="h-3 w-3 text-pink-400" />
+                          <Music className="h-3 w-3 text-brand" />
                           <span className="truncate">{selectedAudioTrack}</span>
                         </div>
-                        <span className="font-mono text-slate-400">{activeSceneData.timecode}</span>
+                        <span className="font-mono text-neutral-400">{activeSceneData.timecode}</span>
                       </div>
 
                       {/* 4 Segmented Progress Bars */}
@@ -1870,7 +1903,7 @@ export default function App() {
                             key={s.id}
                             className={`h-1.5 rounded-full transition-all ${
                               s.id === activeReelScene
-                                ? "bg-indigo-500 shadow-sm shadow-indigo-500"
+                                ? "bg-brand shadow-sm shadow-brand/20"
                                 : s.id < activeReelScene
                                 ? "bg-white/70"
                                 : "bg-white/20"
@@ -1883,7 +1916,7 @@ export default function App() {
                       <div className="flex items-center justify-between pt-1">
                         <button
                           onClick={() => setIsPlayingReel(!isPlayingReel)}
-                          className="h-9 w-9 rounded-full bg-white text-black flex items-center justify-center shadow-lg hover:bg-slate-200 transition-all"
+                          className="h-9 w-9 rounded-full bg-white text-black flex items-center justify-center shadow-lg hover:bg-neutral-200 transition-all"
                         >
                           {isPlayingReel ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
                         </button>
@@ -1903,11 +1936,11 @@ export default function App() {
                   </div>
 
                   {/* Canvas Footer Toolbar */}
-                  <div className="w-full flex items-center justify-between pt-2 text-[11px] text-slate-400">
+                  <div className="w-full flex items-center justify-between pt-2 text-[11px] text-neutral-400">
                     <span className="font-mono">Engine: FFmpeg / Satori 9:16</span>
                     <button
                       onClick={() => alert("Reel MP4 download initialized!")}
-                      className="hover:text-white flex items-center gap-1 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800 transition-all"
+                      className="hover:text-white flex items-center gap-1 bg-neutral-900 px-2.5 py-1 rounded-lg border border-neutral-800 transition-all"
                     >
                       <Download className="h-3 w-3" /> Download 9:16 MP4
                     </button>
@@ -1917,17 +1950,17 @@ export default function App() {
                 {/* Right Column: 4-Scene Storyboard Sequence + Audio Track + Resumability */}
                 <div className="lg:col-span-7 space-y-6">
                   {/* Storyboard Timeline */}
-                  <div className="rounded-3xl border border-slate-800 bg-[#0a101f] p-6 space-y-4 shadow-xl">
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+                  <div className="rounded-3xl border border-neutral-800 bg-[#101010] p-6 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between pb-3 border-b border-neutral-800/80">
                       <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                        <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
                           4-Scene Storyboard Timeline (15s Total)
                         </h3>
-                        <p className="text-xs text-slate-300 font-medium mt-0.5">
+                        <p className="text-xs text-neutral-300 font-medium mt-0.5">
                           Click any scene to preview camera angle, motion cues and kinetic text
                         </p>
                       </div>
-                      <span className="text-[11px] font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
+                      <span className="text-[11px] font-mono text-brand bg-brand/10 px-2 py-0.5 rounded-full border border-brand/20">
                         ≤ 90s Constraint Passed
                       </span>
                     </div>
@@ -1941,15 +1974,15 @@ export default function App() {
                             onClick={() => setActiveReelScene(s.id)}
                             className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center gap-4 ${
                               isCurrent
-                                ? "bg-slate-900 border-indigo-500 shadow-lg shadow-indigo-500/10 ring-1 ring-indigo-500"
-                                : "bg-slate-950/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/40"
+                                ? "bg-neutral-900 border-brand shadow-lg shadow-brand/20 ring-1 ring-brand"
+                                : "bg-neutral-950/60 border-neutral-800/80 hover:border-neutral-700 hover:bg-neutral-900/40"
                             }`}
                           >
-                            <div className="w-20 aspect-[9/16] rounded-xl overflow-hidden relative border border-slate-800 flex-shrink-0 bg-slate-900 flex items-center justify-center">
+                            <div className="w-20 aspect-[9/16] rounded-xl overflow-hidden relative border border-neutral-800 flex-shrink-0 bg-neutral-900 flex items-center justify-center">
                               {s.bgUrl ? (
                                 <img src={s.bgUrl} alt={s.title} className="w-full h-full object-cover" />
                               ) : (
-                                <div className="w-full h-full bg-purple-950/40 flex items-center justify-center text-purple-400">
+                                <div className="w-full h-full bg-brand/5 flex items-center justify-center text-brand">
                                   <Film className="h-5 w-5 opacity-70" />
                                 </div>
                               )}
@@ -1965,13 +1998,13 @@ export default function App() {
                                 <span className="font-bold text-white">
                                   Scene {s.id} · {s.title}
                                 </span>
-                                <span className="text-[10px] font-mono text-slate-400">{s.timecode}</span>
+                                <span className="text-[10px] font-mono text-neutral-400">{s.timecode}</span>
                               </div>
-                              <div className="text-indigo-300 font-bold tracking-wide uppercase text-[11px]">
+                              <div className="text-brand font-bold tracking-wide uppercase text-[11px]">
                                 Caption: {s.caption}
                               </div>
-                              <p className="text-slate-400 text-[11px] line-clamp-1">{s.visual}</p>
-                              <div className="text-[10px] text-pink-400/90 font-mono">Audio Cue: {s.cue}</div>
+                              <p className="text-neutral-400 text-[11px] line-clamp-1">{s.visual}</p>
+                              <div className="text-[10px] text-brand font-mono">Audio Cue: {s.cue}</div>
                             </div>
                           </div>
                         );
@@ -1981,15 +2014,15 @@ export default function App() {
 
                   {/* Audio & Style Pickers */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-2xl border border-slate-800 bg-[#0a101f] space-y-2">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-300">
-                        <Music className="h-4 w-4 text-pink-400" />
+                    <div className="p-4 rounded-2xl border border-neutral-800 bg-[#101010] space-y-2">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-neutral-300">
+                        <Music className="h-4 w-4 text-brand" />
                         <span>Background Soundtrack</span>
                       </div>
                       <select
                         value={selectedAudioTrack}
                         onChange={(e) => setSelectedAudioTrack(e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white"
+                        className="w-full px-3 py-2 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white"
                       >
                         <option value="Cinematic Synth Anthem">Cinematic Synth Anthem (128 BPM)</option>
                         <option value="Ambient Luxury Chill">Ambient Luxury Chill (95 BPM)</option>
@@ -1997,15 +2030,15 @@ export default function App() {
                       </select>
                     </div>
 
-                    <div className="p-4 rounded-2xl border border-slate-800 bg-[#0a101f] space-y-2">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-300">
-                        <Sparkles className="h-4 w-4 text-purple-400" />
+                    <div className="p-4 rounded-2xl border border-neutral-800 bg-[#101010] space-y-2">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-neutral-300">
+                        <Sparkles className="h-4 w-4 text-brand" />
                         <span>Kinetic Caption Style</span>
                       </div>
                       <select
                         value={selectedCaptionStyle}
                         onChange={(e) => setSelectedCaptionStyle(e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white"
+                        className="w-full px-3 py-2 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white"
                       >
                         <option value="Kinetic Pop">⚡ Kinetic Pop (Animated Highlight)</option>
                         <option value="Minimal Clean">✨ Minimal Clean Sans</option>
@@ -2015,32 +2048,32 @@ export default function App() {
                   </div>
 
                   {/* Async Resumable Job State & Pipeline Checkpoint */}
-                  <div className="rounded-3xl border border-purple-900/40 bg-purple-950/10 p-6 space-y-4">
-                    <div className="flex items-center justify-between pb-2 border-b border-purple-900/30">
+                  <div className="rounded-3xl border border-brand/40 bg-brand/5 p-6 space-y-4">
+                    <div className="flex items-center justify-between pb-2 border-b border-brand/30">
                       <div className="flex items-center gap-2">
-                        <Video className="h-4 w-4 text-purple-400" />
-                        <h4 className="text-xs font-semibold text-purple-300 uppercase tracking-wider">
+                        <Video className="h-4 w-4 text-brand" />
+                        <h4 className="text-xs font-semibold text-brand uppercase tracking-wider">
                           Async Resumable Video Pipeline
                         </h4>
                       </div>
-                      <span className="text-[10px] font-mono bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full border border-purple-500/30">
+                      <span className="text-[10px] font-mono bg-brand/10 text-brand px-2 py-0.5 rounded-full border border-brand/30">
                         Checkpoint Saved
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-slate-300">
-                      <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                        <div className="text-[10px] text-slate-400">Worker Status</div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-neutral-300">
+                      <div className="p-3 rounded-xl bg-neutral-950/80 border border-neutral-800">
+                        <div className="text-[10px] text-neutral-400">Worker Status</div>
                         <div className="font-semibold text-white mt-0.5">Survives Restarts</div>
                         <div className="text-[10px] text-emerald-400 mt-1">✓ State Checkpointed</div>
                       </div>
-                      <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                        <div className="text-[10px] text-slate-400">Duration & Spec</div>
+                      <div className="p-3 rounded-xl bg-neutral-950/80 border border-neutral-800">
+                        <div className="text-[10px] text-neutral-400">Duration & Spec</div>
                         <div className="font-semibold text-white mt-0.5">15.0s (4 Scenes)</div>
                         <div className="text-[10px] text-emerald-400 mt-1">✓ 9:16 Vertical Export</div>
                       </div>
-                      <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                        <div className="text-[10px] text-slate-400">Render Progress</div>
+                      <div className="p-3 rounded-xl bg-neutral-950/80 border border-neutral-800">
+                        <div className="text-[10px] text-neutral-400">Render Progress</div>
                         <div className="font-semibold text-white mt-0.5">{reelProgress}% Completed</div>
                         <div className="text-[10px] text-emerald-400 mt-1">✓ Ready for Human Review</div>
                       </div>
@@ -2048,13 +2081,13 @@ export default function App() {
 
                     {/* Proceed Action */}
                     <div className="flex items-center justify-between pt-2">
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-neutral-400">
                         Reel generated end-to-end with brand-consistent captions and music sync.
                       </span>
 
                       <button
                         onClick={() => setActiveStudioTab("REVIEW")}
-                        className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold shadow-lg shadow-purple-600/30 flex items-center gap-2 transition-all"
+                        className="px-6 py-2.5 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink text-xs font-semibold shadow-lg shadow-brand/20 flex items-center gap-2 transition-all"
                       >
                         <span>Proceed to Phase 5 Review →</span>
                         <ArrowRight className="h-4 w-4" />
@@ -2067,12 +2100,12 @@ export default function App() {
             ) : (
               /* PHASE 5: HUMAN-IN-THE-LOOP REVIEW & APPROVAL GATE SCREEN */
               !activeVariant || variantsData.length === 0 ? (
-                <div className="rounded-3xl border border-slate-800 bg-[#0a101f] p-12 text-center space-y-4">
+                <div className="rounded-3xl border border-neutral-800 bg-[#101010] p-12 text-center space-y-4">
                   <div className="h-14 w-14 rounded-2xl bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400">
                     <ShieldCheck className="h-7 w-7" />
                   </div>
                   <h3 className="text-base font-bold text-white">No Deliverables Under Review Yet</h3>
-                  <p className="text-xs text-slate-400 max-w-md mx-auto">
+                  <p className="text-xs text-neutral-400 max-w-md mx-auto">
                     Generate campaign creatives from scratch in the Marketing tab first. Once ready, you can review compliance, annotate scenes, and issue cryptographic sign-off here.
                   </p>
                   <button
@@ -2086,35 +2119,35 @@ export default function App() {
               ) : (
                 <div className="space-y-8">
                   {/* LangGraph Gate Status Header & RBAC Role Switcher */}
-                  <div className="rounded-3xl border border-slate-800 bg-[#0a101f] p-6 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="rounded-3xl border border-neutral-800 bg-[#101010] p-6 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2.5">
                         <span className="h-2.5 w-2.5 rounded-full bg-amber-400 animate-ping" />
                         <span className="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
                           LangGraph Gate: Paused at interrupt()
                         </span>
-                        <span className="text-[11px] font-mono text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded font-bold border border-purple-500/20">
+                        <span className="text-[11px] font-mono text-brand bg-brand/10 px-2 py-0.5 rounded font-bold border border-brand/20">
                           Version v{campaignVersion}
                         </span>
                       </div>
                       <h3 className="text-xl font-black text-white tracking-tight">
                         Human-in-the-Loop Review & Cryptographic Sign-Off Gate
                       </h3>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-neutral-400">
                         The execution graph is paused indefinitely. Inspect brand compliance, review creative deliverables, add comments, or request targeted edits.
                       </p>
                     </div>
 
                     {/* RBAC Role Switcher (Simulates Approver vs Editor) */}
-                    <div className="flex items-center gap-3 bg-slate-950 p-2 rounded-2xl border border-slate-800">
-                      <span className="text-[11px] font-mono text-slate-400 pl-2">Current Role:</span>
-                      <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl">
+                    <div className="flex items-center gap-3 bg-neutral-950 p-2 rounded-2xl border border-neutral-800">
+                      <span className="text-[11px] font-mono text-neutral-400 pl-2">Current Role:</span>
+                      <div className="flex items-center gap-1 bg-neutral-900 p-1 rounded-xl">
                         <button
                           onClick={() => setReviewRole("APPROVER")}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                             reviewRole === "APPROVER"
                               ? "bg-emerald-600 text-white shadow-sm"
-                              : "text-slate-400 hover:text-white"
+                              : "text-neutral-400 hover:text-white"
                           }`}
                         >
                           <Lock className="h-3.5 w-3.5" />
@@ -2125,7 +2158,7 @@ export default function App() {
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                             reviewRole === "EDITOR"
                               ? "bg-amber-600 text-white shadow-sm"
-                              : "text-slate-400 hover:text-white"
+                              : "text-neutral-400 hover:text-white"
                           }`}
                         >
                           <Edit3 className="h-3.5 w-3.5" />
@@ -2140,22 +2173,22 @@ export default function App() {
                     {/* Left Column (5 Cols): Deliverables Preview + Per-Asset Comments */}
                     <div className="lg:col-span-5 space-y-6">
                       {/* Creative Assets Summary Preview */}
-                      <div className="rounded-3xl border border-slate-800 bg-[#0a101f] p-6 space-y-4 shadow-xl">
-                        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                      <div className="rounded-3xl border border-neutral-800 bg-[#101010] p-6 space-y-4 shadow-xl">
+                        <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
                           <div className="flex items-center gap-2">
-                            <Layers className="h-4 w-4 text-indigo-400" />
+                            <Layers className="h-4 w-4 text-brand" />
                             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
                               Deliverables Under Review
                             </h4>
                           </div>
-                          <span className="text-[10px] font-mono text-indigo-300 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
+                          <span className="text-[10px] font-mono text-brand bg-brand/10 px-2 py-0.5 rounded border border-brand/20">
                             3 Posters + 1 Reel
                           </span>
                         </div>
 
                         {/* Selected Poster Variant Preview */}
                         <div className="space-y-3">
-                          <div className="flex items-center justify-between text-xs text-slate-400">
+                          <div className="flex items-center justify-between text-xs text-neutral-400">
                             <span>Active Preview Variant:</span>
                             <div className="flex items-center gap-1 font-mono">
                               {[1, 2, 3].map((idx) => (
@@ -2164,8 +2197,8 @@ export default function App() {
                                   onClick={() => setSelectedVariantIndex(idx as 1 | 2 | 3)}
                                   className={`px-2 py-0.5 rounded text-[11px] ${
                                     selectedVariantIndex === idx
-                                      ? "bg-indigo-600 text-white font-bold"
-                                      : "bg-slate-900 text-slate-400"
+                                      ? "bg-brand text-brand-ink font-bold"
+                                      : "bg-neutral-900 text-neutral-400"
                                   }`}
                                 >
                                   V{idx}
@@ -2174,7 +2207,7 @@ export default function App() {
                             </div>
                           </div>
 
-                          <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-slate-800 shadow-lg bg-slate-950">
+                          <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-neutral-800 shadow-lg bg-neutral-950">
                             {activeVariant ? (
                               <img
                                 src={activeVariant.bgUrl || undefined}
@@ -2182,9 +2215,9 @@ export default function App() {
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-indigo-950/70 to-slate-900 flex flex-col items-center justify-center p-6 text-center">
-                                <Sparkles className="h-8 w-8 text-indigo-400 mb-2" />
-                                <span className="text-xs font-mono text-slate-300">Studio Vector Poster</span>
+                              <div className="w-full h-full bg-gradient-to-br from-brand/35 to-neutral-900 flex flex-col items-center justify-center p-6 text-center">
+                                <Sparkles className="h-8 w-8 text-brand mb-2" />
+                                <span className="text-xs font-mono text-neutral-300">Studio Vector Poster</span>
                               </div>
                             )}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5 flex flex-col justify-end space-y-2">
@@ -2194,7 +2227,7 @@ export default function App() {
                             <h4 className="text-lg font-black text-white leading-tight">
                               {activeVariant.headline}
                             </h4>
-                            <p className="text-xs text-slate-300 line-clamp-2">
+                            <p className="text-xs text-neutral-300 line-clamp-2">
                               {activeVariant.copy.body}
                             </p>
 
@@ -2204,15 +2237,15 @@ export default function App() {
                     </div>
 
                     {/* Per-Asset Comments Tray */}
-                    <div className="rounded-3xl border border-slate-800 bg-[#0a101f] p-6 space-y-4 shadow-xl">
-                      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <div className="rounded-3xl border border-neutral-800 bg-[#101010] p-6 space-y-4 shadow-xl">
+                      <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
                         <div className="flex items-center gap-2">
-                          <MessageSquare className="h-4 w-4 text-pink-400" />
+                          <MessageSquare className="h-4 w-4 text-brand" />
                           <h4 className="text-xs font-bold uppercase tracking-wider text-white">
                             Asset Comments & Annotations
                           </h4>
                         </div>
-                        <span className="text-[10px] font-mono text-pink-300 bg-pink-500/10 px-2 py-0.5 rounded border border-pink-500/20">
+                        <span className="text-[10px] font-mono text-brand bg-brand/10 px-2 py-0.5 rounded border border-brand/20">
                           {commentsList.length} Notes
                         </span>
                       </div>
@@ -2222,31 +2255,31 @@ export default function App() {
                         {commentsList.map((comm) => (
                           <div
                             key={comm.id}
-                            className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1 text-xs"
+                            className="p-3 rounded-xl bg-neutral-950/70 border border-neutral-800/80 space-y-1 text-xs"
                           >
                             <div className="flex items-center justify-between text-[10px]">
                               <span className="font-bold text-white flex items-center gap-1.5">
-                                <span className="h-1.5 w-1.5 rounded-full bg-pink-400" />
+                                <span className="h-1.5 w-1.5 rounded-full bg-brand" />
                                 {comm.author}
                               </span>
-                              <span className="text-slate-400 font-mono">{comm.time}</span>
+                              <span className="text-neutral-400 font-mono">{comm.time}</span>
                             </div>
-                            <div className="text-[10px] font-mono text-indigo-400">
+                            <div className="text-[10px] font-mono text-brand">
                               Target: {comm.asset}
                             </div>
-                            <p className="text-slate-300 text-[11px]">{comm.text}</p>
+                            <p className="text-neutral-300 text-[11px]">{comm.text}</p>
                           </div>
                         ))}
                       </div>
 
                       {/* New Comment Input */}
-                      <div className="space-y-2 pt-2 border-t border-slate-800/60">
+                      <div className="space-y-2 pt-2 border-t border-neutral-800/60">
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-slate-400">Attach to:</span>
+                          <span className="text-[10px] text-neutral-400">Attach to:</span>
                           <select
                             value={commentTargetAsset}
                             onChange={(e) => setCommentTargetAsset(e.target.value)}
-                            className="px-2 py-1 rounded-lg bg-slate-950 border border-slate-800 text-[11px] text-white"
+                            className="px-2 py-1 rounded-lg bg-neutral-950 border border-neutral-800 text-[11px] text-white"
                           >
                             <option value="All Assets">All Assets</option>
                             <option value="Variant 1">Variant 1</option>
@@ -2262,11 +2295,11 @@ export default function App() {
                             value={newCommentInput}
                             onChange={(e) => setNewCommentInput(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleAddComment()}
-                            className="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                            className="flex-1 px-3 py-2 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-brand"
                           />
                           <button
                             onClick={handleAddComment}
-                            className="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-md shadow-indigo-600/20"
+                            className="p-2 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink transition-all shadow-md shadow-brand/20"
                           >
                             <Send className="h-4 w-4" />
                           </button>
@@ -2292,59 +2325,59 @@ export default function App() {
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                        <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-1">
-                          <div className="flex items-center justify-between text-slate-400 text-[10px]">
+                        <div className="p-3.5 rounded-2xl bg-neutral-950/80 border border-neutral-800 space-y-1">
+                          <div className="flex items-center justify-between text-neutral-400 text-[10px]">
                             <span>Deterministic Typography</span>
                             <span className="text-emerald-400 font-bold">✓ PASSED</span>
                           </div>
                           <div className="font-semibold text-white">mcp-media Satori Sharp</div>
-                          <div className="text-[11px] text-slate-400">0% AI letter glitch; sharp SVG vector rendering.</div>
+                          <div className="text-[11px] text-neutral-400">0% AI letter glitch; sharp SVG vector rendering.</div>
                         </div>
 
-                        <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-1">
-                          <div className="flex items-center justify-between text-slate-400 text-[10px]">
+                        <div className="p-3.5 rounded-2xl bg-neutral-950/80 border border-neutral-800 space-y-1">
+                          <div className="flex items-center justify-between text-neutral-400 text-[10px]">
                             <span>Design System Tokens</span>
                             <span className="text-emerald-400 font-bold">✓ PASSED</span>
                           </div>
                           <div className="font-semibold text-white">{brandName} Palette Grounded</div>
-                          <div className="text-[11px] text-slate-400">Primary {primaryColor} and contrast tokens strictly enforced.</div>
+                          <div className="text-[11px] text-neutral-400">Primary {primaryColor} and contrast tokens strictly enforced.</div>
                         </div>
 
-                        <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-1">
-                          <div className="flex items-center justify-between text-slate-400 text-[10px]">
+                        <div className="p-3.5 rounded-2xl bg-neutral-950/80 border border-neutral-800 space-y-1">
+                          <div className="flex items-center justify-between text-neutral-400 text-[10px]">
                             <span>Platform Safe Zones</span>
                             <span className="text-emerald-400 font-bold">✓ PASSED</span>
                           </div>
                           <div className="font-semibold text-white">4:5 Feed & 9:16 Story Safe</div>
-                          <div className="text-[11px] text-slate-400">CTAs and captions remain clear of platform overlays.</div>
+                          <div className="text-[11px] text-neutral-400">CTAs and captions remain clear of platform overlays.</div>
                         </div>
 
-                        <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-1">
-                          <div className="flex items-center justify-between text-slate-400 text-[10px]">
+                        <div className="p-3.5 rounded-2xl bg-neutral-950/80 border border-neutral-800 space-y-1">
+                          <div className="flex items-center justify-between text-neutral-400 text-[10px]">
                             <span>Meta Ad Policies</span>
                             <span className="text-emerald-400 font-bold">✓ PASSED</span>
                           </div>
                           <div className="font-semibold text-white">0 Prohibited Claims</div>
-                          <div className="text-[11px] text-slate-400">Zero false guarantees, deceptive claims or IP flags.</div>
+                          <div className="text-[11px] text-neutral-400">Zero false guarantees, deceptive claims or IP flags.</div>
                         </div>
                       </div>
                     </div>
 
                     {/* Version History & Diff Explorer */}
                     {reviewDiffSummary && (
-                      <div className="rounded-3xl border border-purple-900/40 bg-purple-950/15 p-6 space-y-3 shadow-xl">
-                        <div className="flex items-center justify-between pb-2 border-b border-purple-900/30 text-xs">
+                      <div className="rounded-3xl border border-brand/40 bg-brand/5 p-6 space-y-3 shadow-xl">
+                        <div className="flex items-center justify-between pb-2 border-b border-brand/30 text-xs">
                           <div className="flex items-center gap-2">
-                            <History className="h-4 w-4 text-purple-400" />
-                            <h4 className="font-bold uppercase tracking-wider text-purple-300">
+                            <History className="h-4 w-4 text-brand" />
+                            <h4 className="font-bold uppercase tracking-wider text-brand">
                               Revision History & Diff Summary (v{campaignVersion - 1} → v{campaignVersion})
                             </h4>
                           </div>
-                          <span className="text-[10px] font-mono text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-mono text-brand bg-brand/10 px-2 py-0.5 rounded">
                             Targeted Edit
                           </span>
                         </div>
-                        <div className="p-3.5 rounded-2xl bg-slate-950/90 border border-slate-800 text-xs font-mono text-purple-200">
+                        <div className="p-3.5 rounded-2xl bg-neutral-950/90 border border-neutral-800 text-xs font-mono text-brand">
                           {reviewDiffSummary}
                         </div>
                       </div>
@@ -2353,8 +2386,8 @@ export default function App() {
                     {/* Decision Action Cards */}
                     <div className="space-y-4">
                       {/* Action Option 1: Request Changes */}
-                      <div className="rounded-3xl border border-slate-800 bg-[#0a101f] p-6 space-y-4 shadow-xl">
-                        <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                      <div className="rounded-3xl border border-neutral-800 bg-[#101010] p-6 space-y-4 shadow-xl">
+                        <div className="flex items-center justify-between pb-2 border-b border-neutral-800">
                           <div className="flex items-center gap-2">
                             <Edit3 className="h-4 w-4 text-amber-400" />
                             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
@@ -2366,17 +2399,17 @@ export default function App() {
                           </span>
                         </div>
 
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-neutral-400">
                           Free-text feedback is converted into structured instructions. Executes targeted regeneration on the specific deliverable without restarting the pipeline.
                         </p>
 
                         <div className="space-y-3">
                           <div className="flex items-center justify-between text-xs">
-                            <span className="text-slate-400 font-medium">Target Deliverable:</span>
+                            <span className="text-neutral-400 font-medium">Target Deliverable:</span>
                             <select
                               value={targetAssetForChanges}
                               onChange={(e) => setTargetAssetForChanges(e.target.value)}
-                              className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white"
+                              className="px-3 py-1.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-white"
                             >
                               <option value="Variant 1 (High Energy)">Variant 1 (High Energy)</option>
                               <option value="Variant 2 (Problem/Solution)">Variant 2 (Problem/Solution)</option>
@@ -2389,7 +2422,7 @@ export default function App() {
                             rows={3}
                             value={reviewFeedback}
                             onChange={(e) => setReviewFeedback(e.target.value)}
-                            className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                            className="w-full p-3 rounded-2xl bg-neutral-950 border border-neutral-800 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-brand"
                             placeholder="E.g., Make headline punchier, shift accent to neon purple, and upgrade CTA urgency..."
                           />
 
@@ -2426,7 +2459,7 @@ export default function App() {
                             </span>
                           </div>
                         ) : (
-                          <p className="text-xs text-slate-300">
+                          <p className="text-xs text-neutral-300">
                             Mints a single-use, payload-bound Ed25519 cryptographic token. This token is strictly required by <code className="text-emerald-400">mcp-instagram</code> and <code className="text-emerald-400">mcp-meta-ads</code> to execute publishing in Phase 7.
                           </p>
                         )}
@@ -2437,7 +2470,7 @@ export default function App() {
                           className={`w-full py-3 rounded-xl text-xs font-bold shadow-xl flex items-center justify-center gap-2 transition-all ${
                             reviewRole === "APPROVER"
                               ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-600/30"
-                              : "bg-slate-800 text-slate-500 cursor-not-allowed"
+                              : "bg-neutral-800 text-neutral-500 cursor-not-allowed"
                           }`}
                         >
                           <Lock className="h-4 w-4" />
@@ -2452,18 +2485,18 @@ export default function App() {
 
                         {/* Minted Cryptographic Approval Token Card */}
                         {approvalTokenInfo && (
-                          <div className="p-4 rounded-2xl bg-slate-950 border border-emerald-800/80 space-y-2 text-xs font-mono">
+                          <div className="p-4 rounded-2xl bg-neutral-950 border border-emerald-800/80 space-y-2 text-xs font-mono">
                             <div className="flex items-center justify-between text-emerald-400 font-bold pb-1 border-b border-emerald-900/60">
                               <span>✓ Cryptographic Approval Seal Active</span>
                               <span className="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded">Single-Use</span>
                             </div>
-                            <div className="text-[11px] text-slate-300 space-y-1">
-                              <div><span className="text-slate-500">Algorithm:</span> {approvalTokenInfo.algorithm}</div>
-                              <div><span className="text-slate-500">Token JTI:</span> {approvalTokenInfo.token_jti}</div>
-                              <div className="truncate"><span className="text-slate-500">Payload Hash:</span> {approvalTokenInfo.payload_hash}</div>
-                              <div className="truncate"><span className="text-slate-500">Signature:</span> {approvalTokenInfo.signature}</div>
-                              <div><span className="text-slate-500">Authorized Tool:</span> {approvalTokenInfo.tool_name}</div>
-                              <div><span className="text-slate-500">Signed By:</span> {approvalTokenInfo.approved_by}</div>
+                            <div className="text-[11px] text-neutral-300 space-y-1">
+                              <div><span className="text-neutral-500">Algorithm:</span> {approvalTokenInfo.algorithm}</div>
+                              <div><span className="text-neutral-500">Token JTI:</span> {approvalTokenInfo.token_jti}</div>
+                              <div className="truncate"><span className="text-neutral-500">Payload Hash:</span> {approvalTokenInfo.payload_hash}</div>
+                              <div className="truncate"><span className="text-neutral-500">Signature:</span> {approvalTokenInfo.signature}</div>
+                              <div><span className="text-neutral-500">Authorized Tool:</span> {approvalTokenInfo.tool_name}</div>
+                              <div><span className="text-neutral-500">Signed By:</span> {approvalTokenInfo.approved_by}</div>
                             </div>
                             <div className="text-[10px] text-emerald-400 pt-1">
                               Zero path to publish without this token. Ready for Phase 7 (Publishing).
@@ -2486,7 +2519,7 @@ export default function App() {
                 onClick={() => setExpandedCard(null)}
               >
                 <div
-                  className="bg-[#0b101e] border border-slate-800 rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-2 relative"
+                  className="bg-[#101010] border border-neutral-800 rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-2 relative"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
@@ -2497,7 +2530,7 @@ export default function App() {
                     <X className="h-4 w-4" />
                   </button>
 
-                  <div className="relative h-[480px] md:h-[560px] bg-slate-950 overflow-hidden">
+                  <div className="relative h-[480px] md:h-[560px] bg-neutral-950 overflow-hidden">
                     <img
                       src={expandedCard.bgUrl || undefined}
                       alt=""
@@ -2508,14 +2541,14 @@ export default function App() {
                   <div className="p-6 md:p-8 flex flex-col justify-between space-y-6">
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">
+                        <span className="text-xs font-mono uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand/10 text-brand font-bold border border-brand/30">
                           {expandedCard.tag || `Variant ${expandedCard.index}`}
                         </span>
-                        <span className="text-xs text-slate-400">Gemini MCP Imagen 3</span>
+                        <span className="text-xs text-neutral-400">Gemini MCP Imagen 3</span>
                       </div>
 
                       <div className="space-y-2">
-                        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        <div className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
                           Headline
                         </div>
                         <div className="text-lg font-bold text-white">{expandedCard.headline}</div>
@@ -2523,7 +2556,7 @@ export default function App() {
 
                       {expandedCard.badges && (
                         <div className="space-y-2">
-                          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                          <div className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
                             Feature Badges
                           </div>
                           <div className="flex flex-wrap gap-2">
@@ -2541,24 +2574,24 @@ export default function App() {
 
                       {expandedCard.copy?.body && (
                         <div className="space-y-2">
-                          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                          <div className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
                             Value Proposition
                           </div>
-                          <div className="text-xs text-slate-300 leading-relaxed bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                          <div className="text-xs text-neutral-300 leading-relaxed bg-neutral-900/60 p-3 rounded-xl border border-neutral-800">
                             {expandedCard.copy.body}
                           </div>
                         </div>
                       )}
                     </div>
 
-                    <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+                    <div className="pt-4 border-t border-neutral-800 flex items-center justify-between">
                       {expandedCard.bgUrl && (
                         <a
                           href={expandedCard.bgUrl}
                           download={`poster-variant-${expandedCard.index}.jpg`}
                           target="_blank"
                           rel="noreferrer"
-                          className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white flex items-center gap-2 transition-all"
+                          className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white flex items-center gap-2 transition-all"
                         >
                           <Download className="h-4 w-4" />
                           <span>Download Image</span>
@@ -2570,7 +2603,7 @@ export default function App() {
                           toggleCardSelection(expandedCard.index);
                           setExpandedCard(null);
                         }}
-                        className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-lg transition-all"
+                        className="px-5 py-2 rounded-xl bg-brand hover:bg-brand-hover text-xs font-semibold text-brand-ink shadow-lg transition-all"
                       >
                         {selectedCardIndices.includes(expandedCard.index) ? "Deselect Card" : "Select Card"}
                       </button>
@@ -2587,12 +2620,12 @@ export default function App() {
                 onClick={() => setEditingCard(null)}
               >
                 <div
-                  className="bg-[#0b101e] border border-slate-800 rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-5 shadow-2xl relative"
+                  className="bg-[#101010] border border-neutral-800 rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-5 shadow-2xl relative"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
                     <div className="flex items-center gap-2">
-                      <Edit3 className="h-4 w-4 text-indigo-400" />
+                      <Edit3 className="h-4 w-4 text-brand" />
                       <h3 className="text-base font-bold text-white">
                         Edit Creative #{editingCard.index}
                       </h3>
@@ -2600,7 +2633,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setEditingCard(null)}
-                      className="h-8 w-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-all"
+                      className="h-8 w-8 rounded-full bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-all"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -2608,66 +2641,66 @@ export default function App() {
 
                   <div className="space-y-4">
                     <div>
-                      <label className="text-xs text-slate-400 block mb-1">Headline</label>
+                      <label className="text-xs text-neutral-400 block mb-1">Headline</label>
                       <input
                         type="text"
                         value={editingCard.headline || ""}
                         onChange={(e) =>
                           setEditingCard({ ...editingCard, headline: e.target.value })
                         }
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand"
                       />
                     </div>
 
                     <div>
-                      <label className="text-xs text-slate-400 block mb-1">Subheadline</label>
+                      <label className="text-xs text-neutral-400 block mb-1">Subheadline</label>
                       <input
                         type="text"
                         value={editingCard.subheadline || ""}
                         onChange={(e) =>
                           setEditingCard({ ...editingCard, subheadline: e.target.value })
                         }
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand"
                       />
                     </div>
 
                     <div>
-                      <label className="text-xs text-slate-400 block mb-1">Call To Action (CTA)</label>
+                      <label className="text-xs text-neutral-400 block mb-1">Call To Action (CTA)</label>
                       <input
                         type="text"
                         value={editingCard.cta || ""}
                         onChange={(e) =>
                           setEditingCard({ ...editingCard, cta: e.target.value })
                         }
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand"
                       />
                     </div>
 
                     <div>
-                      <label className="text-xs text-slate-400 block mb-1">
-                        Describe a design change <span className="text-slate-600">(optional)</span>
+                      <label className="text-xs text-neutral-400 block mb-1">
+                        Describe a design change <span className="text-neutral-600">(optional)</span>
                       </label>
                       <textarea
                         value={editChangeNote}
                         onChange={(e) => setEditChangeNote(e.target.value)}
                         rows={3}
                         placeholder="e.g. warmer festive lighting, move the product to the left, add marigold flowers"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500 resize-none"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand resize-none"
                       />
-                      <p className="text-[11px] text-slate-500 mt-1">
+                      <p className="text-[11px] text-neutral-500 mt-1">
                         Text-only edits re-render directly. A described change is applied by the designer agent first.
                       </p>
                     </div>
                   </div>
 
-                  <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-800">
+                  <div className="pt-3 flex items-center justify-end gap-3 border-t border-neutral-800">
                     <button
                       type="button"
                       onClick={() => {
                         setEditingCard(null);
                         setEditChangeNote("");
                       }}
-                      className="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white transition-all"
+                      className="px-4 py-2 rounded-xl text-xs text-neutral-400 hover:text-white transition-all"
                     >
                       Cancel
                     </button>
@@ -2679,7 +2712,7 @@ export default function App() {
                         setEditingCard(null);
                         setEditChangeNote("");
                       }}
-                      className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-xs font-semibold text-white shadow-lg shadow-indigo-600/30 transition-all"
+                      className="px-5 py-2 rounded-xl bg-brand hover:bg-brand-hover disabled:opacity-50 text-xs font-semibold text-brand-ink shadow-lg shadow-brand/20 transition-all"
                     >
                       Re-render poster
                     </button>
@@ -2696,20 +2729,20 @@ export default function App() {
             <div className="flex flex-col lg:flex-row items-start justify-between gap-6 relative -mb-10 sm:-mb-14 lg:-mb-16 z-10 w-full px-2 mt-auto">
               {/* Left Column: Greeting & Headlines brought up */}
               <div className="flex-1 space-y-4 z-10 pt-2 lg:pt-6 pb-6 max-w-2xl">
-                <div className="text-base sm:text-lg text-slate-300 font-medium flex items-center gap-2">
+                <div className="text-base sm:text-lg text-neutral-300 font-medium flex items-center gap-2">
                   <span>Good morning!</span>
                   <span className="text-xl">👋</span>
                 </div>
 
                 <h1 className="text-5xl sm:text-6xl lg:text-[76px] font-black text-white tracking-tight leading-[1.04]">
                   What are we <br />
-                  <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-fuchsia-500 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-[#D4F7E6] via-brand to-[#2FA98C] bg-clip-text text-transparent pb-1">
                     growing
                   </span>{" "}
                   today?
                 </h1>
 
-                <p className="text-base sm:text-lg lg:text-xl text-slate-300 font-normal pt-1">
+                <p className="text-base sm:text-lg lg:text-xl text-neutral-300 font-normal pt-1">
                   Tell your AI marketing team what you want to achieve.
                 </p>
               </div>
@@ -2717,18 +2750,18 @@ export default function App() {
               {/* Right Column: 3D Robot brought down and overlapping chat bar */}
               <div className="relative shrink-0 flex items-end justify-center lg:justify-end w-full lg:w-[580px] self-end">
                 {/* Volumetric Aurora Ambient Lighting Rays matching Image 2 */}
-                <div className="absolute top-6 right-6 w-[450px] h-[380px] bg-gradient-to-br from-blue-500/35 via-indigo-600/30 to-fuchsia-600/35 blur-3xl rounded-full pointer-events-none" />
-                <div className="absolute top-0 right-16 w-80 h-48 bg-cyan-400/25 blur-2xl rounded-full rotate-45 pointer-events-none" />
-                <div className="absolute bottom-10 right-4 w-72 h-56 bg-fuchsia-600/25 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute top-6 right-6 w-[450px] h-[380px] bg-gradient-to-br from-brand/17 via-brand/15 to-brand/17 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute top-0 right-16 w-80 h-48 bg-brand/25 blur-2xl rounded-full rotate-45 pointer-events-none" />
+                <div className="absolute bottom-10 right-4 w-72 h-56 bg-brand/12 blur-3xl rounded-full pointer-events-none" />
 
                 {/* Floating Neon 4-pointed Sparkle Stars matching Image 2 */}
-                <div className="absolute left-6 top-32 text-fuchsia-400 text-3xl select-none animate-pulse pointer-events-none drop-shadow-[0_0_12px_rgba(232,121,249,0.9)]">
+                <div className="absolute left-6 top-32 text-brand text-3xl select-none animate-pulse pointer-events-none drop-shadow-[0_0_12px_rgba(128,207,174,0.9)]">
                   ✦
                 </div>
-                <div className="absolute right-4 top-20 text-cyan-300 text-3xl select-none pointer-events-none drop-shadow-[0_0_12px_rgba(103,232,249,0.9)]">
+                <div className="absolute right-4 top-20 text-brand text-3xl select-none pointer-events-none drop-shadow-[0_0_12px_rgba(128,207,174,0.9)]">
                   ✦
                 </div>
-                <div className="absolute right-14 bottom-24 text-fuchsia-400 text-xl select-none pointer-events-none drop-shadow-[0_0_8px_rgba(232,121,249,0.8)]">
+                <div className="absolute right-14 bottom-24 text-brand text-xl select-none pointer-events-none drop-shadow-[0_0_8px_rgba(128,207,174,0.8)]">
                   ✦
                 </div>
 
@@ -2745,7 +2778,7 @@ export default function App() {
             <div className="w-full relative z-20">
               {/* Entry mode: create creatives with AI, or bring your own */}
               <div className="mb-3 flex flex-col sm:flex-row sm:items-center gap-3">
-                <div className="inline-flex p-1 rounded-2xl border border-slate-800 bg-[#0a0f1e]/90 backdrop-blur-xl shadow-lg">
+                <div className="inline-flex p-1 rounded-2xl border border-neutral-800 bg-[#0f0f0f]/90 backdrop-blur-xl shadow-lg">
                   {([
                     { key: "create", label: "Create with AI Studio", icon: Sparkles },
                     { key: "upload", label: "I have my creatives", icon: Upload },
@@ -2756,8 +2789,8 @@ export default function App() {
                       onClick={() => setHomeMode(key)}
                       className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
                         homeMode === key
-                          ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-600/30"
-                          : "text-slate-400 hover:text-white"
+                          ? "bg-brand hover:bg-brand-hover text-brand-ink shadow-md shadow-brand/20"
+                          : "text-neutral-400 hover:text-white"
                       }`}
                     >
                       <Icon className="h-3.5 w-3.5" />
@@ -2765,13 +2798,13 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-neutral-500">
                   {homeMode === "create"
                     ? "Our AI designer makes posters from your product photo, then plans and launches the campaign."
                     : "Upload finished posters or videos: we plan the Meta campaign, post to Instagram and run ads."}
                 </p>
               </div>
-              <div className="rounded-2xl border border-indigo-500/40 bg-[#090d1c]/90 backdrop-blur-xl shadow-[0_0_40px_rgba(99,102,241,0.25)] p-5 sm:p-6 transition-all focus-within:border-indigo-400 focus-within:shadow-[0_0_50px_rgba(99,102,241,0.38)] relative z-20">
+              <div className="rounded-2xl border border-brand/40 bg-[#0d0d0d]/90 backdrop-blur-xl shadow-[0_0_40px_rgba(128,207,174,0.12)] p-5 sm:p-6 transition-all focus-within:border-brand focus-within:shadow-[0_0_50px_rgba(128,207,174,0.19)] relative z-20">
                 {homeMode === "upload" ? (
                   <div className="space-y-4 pb-4">
                     <CreativeUploader assets={uploadAssets} onChange={setUploadAssets} />
@@ -2781,13 +2814,13 @@ export default function App() {
                         onChange={(e) => setPromptText(e.target.value)}
                         placeholder="Anything the strategist should know? Product, offer, who it's for, where you sell…"
                         rows={2}
-                        className="md:col-span-2 w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 resize-none"
+                        className="md:col-span-2 w-full px-3.5 py-2.5 rounded-xl bg-neutral-900/70 border border-neutral-800 text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-brand resize-none"
                       />
                       <input
                         value={uploadWebsite}
                         onChange={(e) => setUploadWebsite(e.target.value)}
                         placeholder="Website link (optional)"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900/70 border border-neutral-800 text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-brand"
                       />
                     </div>
                     {campaignStartError && <p className="text-[11px] text-rose-400">{campaignStartError}</p>}
@@ -2800,7 +2833,7 @@ export default function App() {
                   onChange={(e) => setPromptText(e.target.value)}
                   placeholder="Describe your campaign goal, product, or offer..."
                   rows={4}
-                  className="w-full bg-transparent text-base sm:text-lg text-slate-100 placeholder:text-slate-500 focus:outline-none resize-none leading-relaxed min-h-[110px] sm:min-h-[130px] py-1"
+                  className="w-full bg-transparent text-base sm:text-lg text-neutral-100 placeholder:text-neutral-500 focus:outline-none resize-none leading-relaxed min-h-[110px] sm:min-h-[130px] py-1"
                 />
 
                 {/* Tag pills if any image ref or files attached */}
@@ -2825,13 +2858,13 @@ export default function App() {
                     {attachedFiles.map((f, i) => (
                       <span
                         key={i}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700/60 text-[11px] text-slate-300"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-800/80 border border-neutral-700/60 text-[11px] text-neutral-300"
                       >
-                        <Paperclip className="h-3 w-3 text-indigo-400" />
+                        <Paperclip className="h-3 w-3 text-brand" />
                         <span>{f.name}</span>
                         <button
                           onClick={() => setAttachedFiles((prev) => prev.filter((_, idx) => idx !== i))}
-                          className="text-slate-500 hover:text-rose-400 ml-0.5"
+                          className="text-neutral-500 hover:text-rose-400 ml-0.5"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -2843,21 +2876,21 @@ export default function App() {
                 )}
 
                 {/* Bottom Controls Row matching Image 2 */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80 text-xs text-slate-300">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-neutral-800/80 text-xs text-neutral-300">
                   <div className="flex flex-wrap items-center gap-3">
                     {homeMode === "create" && (
                     <>
                     {/* Add image */}
                     <label
                       title="Product photo(s) are sent to Gemini so the poster shows your real product"
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-800 bg-[#0c1222]/80 hover:bg-[#11192e] hover:border-slate-700 text-slate-300 hover:text-white transition-all ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-neutral-800 bg-[#121212]/80 hover:bg-[#191919] hover:border-neutral-700 text-neutral-300 hover:text-white transition-all ${
                         productImages.length >= MAX_PRODUCT_IMAGES || isUploadingProduct ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
                       }`}
                     >
                       {isUploadingProduct ? (
-                        <RefreshCw className="h-3.5 w-3.5 text-slate-400 animate-spin" />
+                        <RefreshCw className="h-3.5 w-3.5 text-neutral-400 animate-spin" />
                       ) : (
-                        <ImageIcon className="h-3.5 w-3.5 text-slate-400" />
+                        <ImageIcon className="h-3.5 w-3.5 text-neutral-400" />
                       )}
                       <span>
                         {isUploadingProduct
@@ -2883,25 +2916,25 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => setShowAttachModal(true)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-800 bg-[#0c1222]/80 hover:bg-[#11192e] hover:border-slate-700 text-slate-300 hover:text-white transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-neutral-800 bg-[#121212]/80 hover:bg-[#191919] hover:border-neutral-700 text-neutral-300 hover:text-white transition-all"
                     >
-                      <Paperclip className="h-3.5 w-3.5 text-slate-400" />
+                      <Paperclip className="h-3.5 w-3.5 text-neutral-400" />
                       <span>Attach files</span>
                     </button>
 
                     {/* Vertical Divider */}
-                    <div className="h-5 w-px bg-slate-800 hidden sm:block" />
+                    <div className="h-5 w-px bg-neutral-800 hidden sm:block" />
                     </>
                     )}
 
                     {/* Ad duration pill group */}
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1 text-slate-400">
+                      <div className="flex items-center gap-1 text-neutral-400">
                         <Calendar className="h-3.5 w-3.5" />
                         <span className="font-medium">Ad duration</span>
-                        <Info className="h-3 w-3 text-slate-500 cursor-pointer" />
+                        <Info className="h-3 w-3 text-neutral-500 cursor-pointer" />
                       </div>
-                      <div className="flex items-center gap-1 bg-[#0c1222] p-0.5 rounded-xl border border-slate-800/80">
+                      <div className="flex items-center gap-1 bg-[#121212] p-0.5 rounded-xl border border-neutral-800/80">
                         {[
                           { days: 3, label: "3 days" },
                           { days: 7, label: "7 days" },
@@ -2916,8 +2949,8 @@ export default function App() {
                               onClick={() => setDurationDays(item.days)}
                               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                                 isSelected
-                                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/30"
-                                  : "text-slate-400 hover:text-slate-200"
+                                  ? "bg-brand text-brand-ink font-semibold shadow-md shadow-brand/20"
+                                  : "text-neutral-400 hover:text-neutral-200"
                               }`}
                             >
                               {item.label}
@@ -2928,23 +2961,23 @@ export default function App() {
                     </div>
 
                     {/* Vertical Divider */}
-                    <div className="h-5 w-px bg-slate-800 hidden sm:block" />
+                    <div className="h-5 w-px bg-neutral-800 hidden sm:block" />
 
                     {/* Budget */}
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1 text-slate-400">
+                      <div className="flex items-center gap-1 text-neutral-400">
                         <Tag className="h-3.5 w-3.5" />
                         <span className="font-medium">Budget</span>
-                        <Info className="h-3 w-3 text-slate-500 cursor-pointer" />
+                        <Info className="h-3 w-3 text-neutral-500 cursor-pointer" />
                       </div>
-                      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-800 bg-[#0c1222]/80 text-slate-300">
-                        <span className="text-slate-400 font-bold">₹</span>
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-neutral-800 bg-[#121212]/80 text-neutral-300">
+                        <span className="text-neutral-400 font-bold">₹</span>
                         <input
                           type="text"
                           value={budgetINR}
                           onChange={(e) => setBudgetINR(e.target.value)}
                           placeholder="Set daily budget"
-                          className="bg-transparent text-xs text-white placeholder:text-slate-500 focus:outline-none w-28"
+                          className="bg-transparent text-xs text-white placeholder:text-neutral-500 focus:outline-none w-28"
                         />
                       </div>
                     </div>
@@ -2955,7 +2988,7 @@ export default function App() {
                     type="button"
                     onClick={homeMode === "upload" ? handleStartUploadedCampaign : handleStartCampaign}
                     disabled={isCreatingCampaign || (homeMode === "upload" && uploadAssets.length === 0)}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink text-xs font-semibold shadow-lg shadow-brand/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
                   >
                     <span>
                       {isCreatingCampaign ? "Starting…" : homeMode === "upload" ? "Plan my campaign" : "Create campaign"}
@@ -2971,21 +3004,21 @@ export default function App() {
         {/* Modal: Attach Files */}
         {showAttachModal && (
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-[#0d1322] p-6 space-y-4">
-              <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <div className="w-full max-w-md rounded-2xl border border-neutral-800 bg-[#131313] p-6 space-y-4">
+              <div className="flex justify-between items-center pb-2 border-b border-neutral-800">
                 <h3 className="text-sm font-semibold text-white">Attach Reference Files</h3>
-                <button onClick={() => setShowAttachModal(false)} className="text-slate-400 hover:text-white">
+                <button onClick={() => setShowAttachModal(false)} className="text-neutral-400 hover:text-white">
                   <X className="h-4 w-4" />
                 </button>
               </div>
-              <div className="border-2 border-dashed border-slate-700 rounded-xl p-6 text-center text-xs text-slate-400">
-                <Upload className="h-6 w-6 text-slate-500 mx-auto mb-2" />
+              <div className="border-2 border-dashed border-neutral-700 rounded-xl p-6 text-center text-xs text-neutral-400">
+                <Upload className="h-6 w-6 text-neutral-500 mx-auto mb-2" />
                 <span>Drop files here or click to browse</span>
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   onClick={() => setShowAttachModal(false)}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-medium"
+                  className="px-4 py-2 rounded-xl bg-brand text-brand-ink text-xs font-medium"
                 >
                   Done
                 </button>
@@ -2997,10 +3030,10 @@ export default function App() {
         {/* Modal: Product Details */}
         {showProductModal && (
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-[#0d1322] p-6 space-y-4">
-              <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <div className="w-full max-w-md rounded-2xl border border-neutral-800 bg-[#131313] p-6 space-y-4">
+              <div className="flex justify-between items-center pb-2 border-b border-neutral-800">
                 <h3 className="text-sm font-semibold text-white">Select Product from Catalog</h3>
-                <button onClick={() => setShowProductModal(false)} className="text-slate-400 hover:text-white">
+                <button onClick={() => setShowProductModal(false)} className="text-neutral-400 hover:text-white">
                   <X className="h-4 w-4" />
                 </button>
               </div>
@@ -3012,10 +3045,10 @@ export default function App() {
                       setSelectedProduct(`${p.name} (₹${p.price.toLocaleString()})`);
                       setShowProductModal(false);
                     }}
-                    className="w-full text-left p-3 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-indigo-950/40 text-xs"
+                    className="w-full text-left p-3 rounded-xl border border-neutral-800 bg-neutral-900/60 hover:bg-brand/5 text-xs"
                   >
                     <div className="font-semibold text-white">{p.name}</div>
-                    <div className="text-[11px] text-slate-400">{p.description}</div>
+                    <div className="text-[11px] text-neutral-400">{p.description}</div>
                   </button>
                 ))}
               </div>
@@ -3026,37 +3059,37 @@ export default function App() {
         {/* Modal: Advanced Options */}
         {showAdvancedModal && (
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-[#0d1322] p-6 space-y-4">
-              <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <div className="w-full max-w-md rounded-2xl border border-neutral-800 bg-[#131313] p-6 space-y-4">
+              <div className="flex justify-between items-center pb-2 border-b border-neutral-800">
                 <h3 className="text-sm font-semibold text-white">Advanced Campaign Options</h3>
-                <button onClick={() => setShowAdvancedModal(false)} className="text-slate-400 hover:text-white">
+                <button onClick={() => setShowAdvancedModal(false)} className="text-neutral-400 hover:text-white">
                   <X className="h-4 w-4" />
                 </button>
               </div>
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="text-slate-400 block mb-1">Target Ad Budget (INR)</label>
+                  <label className="text-neutral-400 block mb-1">Target Ad Budget (INR)</label>
                   <input
                     type="text"
                     value={budgetINR}
                     onChange={(e) => setBudgetINR(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white"
+                    className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-white"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 block mb-1">Duration (Days)</label>
+                  <label className="text-neutral-400 block mb-1">Duration (Days)</label>
                   <input
                     type="number"
                     value={durationDays ?? ""}
                     onChange={(e) => setDurationDays(e.target.value ? Number(e.target.value) : null)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white"
+                    className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-white"
                   />
                 </div>
               </div>
               <div className="flex justify-end pt-2">
                 <button
                   onClick={() => setShowAdvancedModal(false)}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-medium"
+                  className="px-4 py-2 rounded-xl bg-brand text-brand-ink text-xs font-medium"
                 >
                   Save Options
                 </button>
@@ -3068,17 +3101,17 @@ export default function App() {
         {/* Modal: Live Design Tokens Viewer */}
         {showTokensViewer && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-            <div className="w-full max-w-2xl rounded-2xl border border-slate-800 bg-[#0a0f1d] p-6 space-y-4 max-h-[85vh] flex flex-col">
-              <div className="flex justify-between items-center pb-3 border-b border-slate-800">
+            <div className="w-full max-w-2xl rounded-2xl border border-neutral-800 bg-[#0f0f0f] p-6 space-y-4 max-h-[85vh] flex flex-col">
+              <div className="flex justify-between items-center pb-3 border-b border-neutral-800">
                 <div className="flex items-center gap-2">
-                  <Code2 className="h-4 w-4 text-indigo-400" />
+                  <Code2 className="h-4 w-4 text-brand" />
                   <h3 className="text-sm font-semibold text-white">mcp-knowledge: Compiled Design Tokens</h3>
                 </div>
-                <button onClick={() => setShowTokensViewer(false)} className="text-slate-400 hover:text-white">
+                <button onClick={() => setShowTokensViewer(false)} className="text-neutral-400 hover:text-white">
                   <X className="h-4 w-4" />
                 </button>
               </div>
-              <pre className="flex-1 bg-slate-950 p-4 rounded-xl text-xs font-mono text-emerald-400 overflow-y-auto border border-slate-800/80">
+              <pre className="flex-1 bg-neutral-950 p-4 rounded-xl text-xs font-mono text-emerald-400 overflow-y-auto border border-neutral-800/80">
 {JSON.stringify(
   {
     brand_name: brandName,
@@ -3099,11 +3132,11 @@ export default function App() {
         {/* Modal: Gemini MCP Connector & Gateway Configuration */}
         {showGeminiModal && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-            <div className="w-full max-w-2xl rounded-3xl border border-purple-500/40 bg-[#0a0f1d] p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto shadow-2xl shadow-purple-950/60">
+            <div className="w-full max-w-2xl rounded-3xl border border-brand/40 bg-[#0f0f0f] p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto shadow-2xl shadow-brand/20">
               {/* Header */}
-              <div className="flex justify-between items-start pb-4 border-b border-slate-800">
+              <div className="flex justify-between items-start pb-4 border-b border-neutral-800">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-pink-600 flex items-center justify-center text-white shadow-lg shadow-purple-600/30">
+                  <div className="h-10 w-10 rounded-2xl bg-brand hover:bg-brand-hover flex items-center justify-center text-brand-ink shadow-lg shadow-brand/20">
                     <Sparkles className="h-5 w-5" />
                   </div>
                   <div>
@@ -3113,66 +3146,66 @@ export default function App() {
                         MCP v0.1.0 Ready
                       </span>
                     </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-neutral-400 mt-0.5">
                       Model Context Protocol bridge for Imagen 3 poster art & Veo 2 vertical video reels
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setShowGeminiModal(false)}
-                  className="p-1.5 rounded-xl border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all"
+                  className="p-1.5 rounded-xl border border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800/60 transition-all"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               {/* Status & Agent Hold Alert */}
-              <div className="p-4 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 space-y-2">
+              <div className="p-4 rounded-2xl bg-brand/5 border border-brand/30 space-y-2">
                 <div className="flex items-center justify-between text-xs font-semibold">
-                  <div className="flex items-center gap-2 text-indigo-300">
-                    <ShieldCheck className="h-4 w-4 text-indigo-400" />
+                  <div className="flex items-center gap-2 text-brand">
+                    <ShieldCheck className="h-4 w-4 text-brand" />
                     <span>Active Generation Engine: Gemini MCP Gateway</span>
                   </div>
                   <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full font-mono">
                     Custom Agents: ON HOLD
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-300 leading-relaxed">
-                  Per POC requirement, <span className="font-mono text-indigo-300">designer_agent.py</span> and <span className="font-mono text-indigo-300">video_agent.py</span> are preserved intact in the codebase and placed on hold pending training. Graphic posters and video reels are actively generated via the Gemini MCP Gateway.
+                <p className="text-[11px] text-neutral-300 leading-relaxed">
+                  Per POC requirement, <span className="font-mono text-brand">designer_agent.py</span> and <span className="font-mono text-brand">video_agent.py</span> are preserved intact in the codebase and placed on hold pending training. Graphic posters and video reels are actively generated via the Gemini MCP Gateway.
                 </p>
               </div>
 
               {/* Live Connection Metrics */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800">
-                  <div className="text-[11px] text-slate-400">Connection Status</div>
+                <div className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800">
+                  <div className="text-[11px] text-neutral-400">Connection Status</div>
                   <div className="text-sm font-bold text-emerald-400 flex items-center gap-1.5 mt-1">
                     <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     {isGeminiMcpConnected ? "CONNECTED" : "OFFLINE"}
                   </div>
-                  <div className="text-[10px] text-slate-500 mt-0.5 font-mono">Protocol: MCP Server</div>
+                  <div className="text-[10px] text-neutral-500 mt-0.5 font-mono">Protocol: MCP Server</div>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800">
-                  <div className="text-[11px] text-slate-400">Live Latency</div>
+                <div className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800">
+                  <div className="text-[11px] text-neutral-400">Live Latency</div>
                   <div className="text-sm font-bold text-white mt-1">
                     {geminiLatency ? `${geminiLatency} ms` : "12 ms"}
                   </div>
-                  <div className="text-[10px] text-slate-500 mt-0.5">In-Memory Gateway</div>
+                  <div className="text-[10px] text-neutral-500 mt-0.5">In-Memory Gateway</div>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800">
-                  <div className="text-[11px] text-slate-400">Gateway Engine</div>
-                  <div className="text-sm font-bold text-purple-300 truncate mt-1">
+                <div className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800">
+                  <div className="text-[11px] text-neutral-400">Gateway Engine</div>
+                  <div className="text-sm font-bold text-brand truncate mt-1">
                     {geminiMcpEngine.split("(")[0].trim() || "Gemini MCP"}
                   </div>
-                  <div className="text-[10px] text-slate-500 mt-0.5">Imagen 3 + Veo 2</div>
+                  <div className="text-[10px] text-neutral-500 mt-0.5">Imagen 3 + Veo 2</div>
                 </div>
               </div>
 
               {/* Real Google Account / Gemini MCP Connection Card */}
-              <div className="p-5 rounded-2xl bg-[#0d1424] border border-purple-500/30 space-y-4 shadow-xl">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+              <div className="p-5 rounded-2xl bg-[#141414] border border-brand/30 space-y-4 shadow-xl">
+                <div className="flex items-center justify-between pb-3 border-b border-neutral-800/80">
                   <div className="flex items-center gap-2.5">
                     {/* Google G Logo SVG */}
                     <div className="h-7 w-7 rounded-xl bg-white flex items-center justify-center p-1 shadow-sm shrink-0">
@@ -3185,7 +3218,7 @@ export default function App() {
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-white">Google Gemini Account Connection</h4>
-                      <span className="text-[10px] text-slate-400">Model Context Protocol (MCP) Live Gateway</span>
+                      <span className="text-[10px] text-neutral-400">Model Context Protocol (MCP) Live Gateway</span>
                     </div>
                   </div>
 
@@ -3204,7 +3237,7 @@ export default function App() {
                 {isGeminiMcpConnected && geminiUser ? (
                   /* ✅ Connected — Show real Google user profile */
                   <div className="space-y-4">
-                    <div className="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30 flex flex-wrap items-center justify-between gap-3">
+                    <div className="p-4 rounded-xl bg-neutral-900/90 border border-emerald-500/30 flex flex-wrap items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
                         {/* Real Google avatar */}
                         {geminiUser.avatar ? (
@@ -3226,8 +3259,8 @@ export default function App() {
                             <span>{geminiUser.name}</span>
                             <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-mono">✓ Google Account</span>
                           </div>
-                          <div className="text-[11px] text-slate-400 mt-0.5">{geminiUser.email}</div>
-                          <div className="text-[10px] text-slate-500 mt-0.5 font-mono">
+                          <div className="text-[11px] text-neutral-400 mt-0.5">{geminiUser.email}</div>
+                          <div className="text-[10px] text-neutral-500 mt-0.5 font-mono">
                             Connected {new Date(geminiUser.connected_at).toLocaleString()}
                           </div>
                         </div>
@@ -3236,7 +3269,7 @@ export default function App() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={handleSignInWithGoogle}
-                          className="px-3 py-1.5 rounded-lg border border-indigo-700 bg-indigo-950/60 hover:bg-indigo-900/60 text-indigo-300 hover:text-white text-xs transition-all flex items-center gap-1.5"
+                          className="px-3 py-1.5 rounded-lg border border-brand bg-brand/5 hover:bg-brand/15 text-brand hover:text-white text-xs transition-all flex items-center gap-1.5"
                           title="Reconnect to grant updated Gemini Cloud Platform permissions"
                         >
                           <RefreshCw className="h-3 w-3" />
@@ -3253,7 +3286,7 @@ export default function App() {
 
                     {/* Granted Scopes */}
                     <div>
-                      <div className="text-[11px] font-semibold text-slate-300 mb-2">Permissions Granted</div>
+                      <div className="text-[11px] font-semibold text-neutral-300 mb-2">Permissions Granted</div>
                       <div className="flex flex-wrap gap-1.5">
                         {(geminiUser.scopes || []).map((scope: string, idx: number) => (
                           <span key={idx} className="px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-800/50 text-emerald-300 font-mono text-[10px] flex items-center gap-1">
@@ -3266,10 +3299,10 @@ export default function App() {
 
                     {/* Available Models */}
                     <div>
-                      <div className="text-[11px] font-semibold text-slate-300 mb-1.5">Active Gemini Models</div>
+                      <div className="text-[11px] font-semibold text-neutral-300 mb-1.5">Active Gemini Models</div>
                       <div className="flex flex-wrap gap-1.5">
                         {(geminiModelsList.length ? geminiModelsList : ["gemini-1.5-flash", "gemini-1.5-pro", "imagen-3.0-generate-002", "veo-2.0-generate-001"]).map((m, idx) => (
-                          <span key={idx} className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-indigo-300 font-mono text-[10px]">
+                          <span key={idx} className="px-2.5 py-1 rounded-lg bg-neutral-950 border border-neutral-800 text-brand font-mono text-[10px]">
                             {m}
                           </span>
                         ))}
@@ -3277,10 +3310,10 @@ export default function App() {
                     </div>
 
                     {/* Optional Google AI Studio Key Override */}
-                    <div className="pt-3 border-t border-slate-800/80">
+                    <div className="pt-3 border-t border-neutral-800/80">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[11px] text-slate-400 font-medium">Google AI Studio Key (Direct Override)</span>
-                        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-[10px] text-indigo-400 hover:underline">
+                        <span className="text-[11px] text-neutral-400 font-medium">Google AI Studio Key (Direct Override)</span>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-[10px] text-brand hover:underline">
                           Get Key →
                         </a>
                       </div>
@@ -3293,7 +3326,7 @@ export default function App() {
                             if (typeof window !== "undefined") localStorage.setItem("gemini_api_key", e.target.value);
                           }}
                           placeholder="AIzaSy... (optional for direct Imagen 3 synthesis)"
-                          className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 font-mono"
+                          className="flex-1 bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-1.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-brand font-mono"
                         />
                         {geminiApiKey && (
                           <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1 shrink-0">
@@ -3305,7 +3338,7 @@ export default function App() {
                   </div>
                 ) : (
                   /* 🔐 Not connected — Show Sign in with Google button */
-                  <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950 border border-slate-800 space-y-5">
+                  <div className="p-6 rounded-2xl bg-gradient-to-b from-neutral-900/90 to-neutral-950 border border-neutral-800 space-y-5">
                     <div className="text-center space-y-2">
                       <div className="h-14 w-14 rounded-2xl bg-white flex items-center justify-center mx-auto shadow-lg p-2.5">
                         <svg className="w-full h-full" viewBox="0 0 24 24">
@@ -3316,7 +3349,7 @@ export default function App() {
                         </svg>
                       </div>
                       <h5 className="text-sm font-bold text-white">Connect with Google</h5>
-                      <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
+                      <p className="text-xs text-neutral-400 max-w-xs mx-auto leading-relaxed">
                         Sign in with your Google account to unlock Imagen 3 poster generation and Veo 2 video reels via Gemini MCP.
                       </p>
                     </div>
@@ -3324,7 +3357,7 @@ export default function App() {
                     {/* The real OAuth button */}
                     <button
                       onClick={handleSignInWithGoogle}
-                      className="w-full flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.99] border border-slate-200"
+                      className="w-full flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl bg-white hover:bg-neutral-50 text-neutral-800 text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.99] border border-neutral-200"
                     >
                       <svg className="h-5 w-5" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -3335,7 +3368,7 @@ export default function App() {
                       Sign in with Google
                     </button>
 
-                    <p className="text-center text-[10px] text-slate-500">
+                    <p className="text-center text-[10px] text-neutral-500">
                       You'll be redirected to Google to approve access.
                       <br />No API key setup required.
                     </p>
@@ -3350,7 +3383,7 @@ export default function App() {
                 )}
 
                 {geminiNoticeMessage && (
-                  <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] font-mono text-emerald-400 flex items-center gap-2">
+                  <div className="p-2.5 rounded-xl bg-neutral-950/80 border border-neutral-800 text-[11px] font-mono text-emerald-400 flex items-center gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                     <span>{geminiNoticeMessage}</span>
                   </div>
@@ -3359,21 +3392,21 @@ export default function App() {
 
               {/* Active MCP Tools Registry */}
               <div className="space-y-2">
-                <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                <h4 className="text-xs font-semibold text-neutral-300 uppercase tracking-wider">
                   Active Gemini MCP Tool Registry ({geminiToolsList.length})
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   {geminiToolsList.map((tool, idx) => (
-                    <div key={idx} className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-start gap-2.5">
-                      <div className="h-6 w-6 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <div key={idx} className="p-2.5 rounded-xl bg-neutral-900/60 border border-neutral-800/80 flex items-start gap-2.5">
+                      <div className="h-6 w-6 rounded-lg bg-brand/10 text-brand flex items-center justify-center shrink-0 mt-0.5">
                         <Sparkles className="h-3 w-3" />
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-semibold text-indigo-300 text-[11px] truncate">{tool.name}</span>
-                          <span className="text-[9px] bg-slate-800 px-1.5 py-0.2 rounded text-slate-400">{tool.category}</span>
+                          <span className="font-mono font-semibold text-brand text-[11px] truncate">{tool.name}</span>
+                          <span className="text-[9px] bg-neutral-800 px-1.5 py-0.2 rounded text-neutral-400">{tool.category}</span>
                         </div>
-                        <p className="text-[10px] text-slate-400 truncate mt-0.5">{tool.description}</p>
+                        <p className="text-[10px] text-neutral-400 truncate mt-0.5">{tool.description}</p>
                       </div>
                     </div>
                   ))}
@@ -3381,10 +3414,10 @@ export default function App() {
               </div>
 
               {/* Close Button */}
-              <div className="flex justify-end pt-2 border-t border-slate-800">
+              <div className="flex justify-end pt-2 border-t border-neutral-800">
                 <button
                   onClick={() => setShowGeminiModal(false)}
-                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/30 transition-all"
+                  className="px-5 py-2.5 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink text-xs font-semibold shadow-md shadow-brand/20 transition-all"
                 >
                   Done
                 </button>

@@ -54,16 +54,16 @@ export default function CreativeUploader({ assets, onChange, max = 10 }: Props) 
         }}
         onClick={() => inputRef.current?.click()}
         className={`cursor-pointer rounded-2xl border-2 border-dashed p-6 sm:p-8 text-center transition-all ${
-          dragging ? "border-indigo-400 bg-indigo-950/30" : "border-slate-700/80 hover:border-indigo-500/70 bg-slate-900/30"
+          dragging ? "border-brand bg-brand/5" : "border-neutral-700/80 hover:border-brand/70 bg-neutral-900/30"
         }`}
       >
-        <div className="h-12 w-12 mx-auto rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-300 mb-3">
+        <div className="h-12 w-12 mx-auto rounded-2xl bg-brand/10 border border-brand/30 flex items-center justify-center text-brand mb-3">
           {uploading ? <RefreshCw className="h-6 w-6 animate-spin" /> : <ImagePlus className="h-6 w-6" />}
         </div>
         <p className="text-sm font-semibold text-white">
           {uploading ? `Uploading ${uploading}…` : "Drop your posters and videos here"}
         </p>
-        <p className="text-[11px] text-slate-400 mt-1">
+        <p className="text-[11px] text-neutral-400 mt-1">
           JPG, PNG or WebP posters · MP4 video optional · up to {max} files · 2+ files post as a carousel
         </p>
         <input
@@ -82,7 +82,7 @@ export default function CreativeUploader({ assets, onChange, max = 10 }: Props) 
       {assets.length > 0 && (
         <div className="flex flex-wrap gap-3">
           {assets.map((a) => (
-            <div key={a.asset_id} className="relative h-28 w-[90px] rounded-xl overflow-hidden border border-slate-700 bg-slate-950 group">
+            <div key={a.asset_id} className="relative h-28 w-[90px] rounded-xl overflow-hidden border border-neutral-700 bg-neutral-950 group">
               {a.kind === "video" ? (
                 <video src={a.url} className="h-full w-full object-cover" muted playsInline />
               ) : (

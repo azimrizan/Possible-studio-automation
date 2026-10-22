@@ -77,13 +77,13 @@ export default function MetaConnectCard({ compact = false, onChange }: Props) {
       <button
         type="button"
         onClick={() => setShowToken((v) => !v)}
-        className="text-[11px] text-indigo-300 hover:text-indigo-200 underline-offset-2 hover:underline"
+        className="text-[11px] text-brand hover:text-brand underline-offset-2 hover:underline"
       >
         {showToken ? "Hide" : conn?.connected ? "Switch to a Business System User token" : "Use a Business System User token instead"}
       </button>
       {showToken && (
-        <div className="mt-2 space-y-2 rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-          <p className="text-[11px] text-slate-400">
+        <div className="mt-2 space-y-2 rounded-xl border border-neutral-800 bg-neutral-900/60 p-3">
+          <p className="text-[11px] text-neutral-400">
             Generate it in Meta Business settings → Users → System users → Generate token (app: Possible Studio). It belongs to
             your business, not a person, so personal login security checks don&apos;t block it. Stored encrypted; never shown again.
           </p>
@@ -94,13 +94,13 @@ export default function MetaConnectCard({ compact = false, onChange }: Props) {
               value={tokenInput}
               onChange={(e) => setTokenInput(e.target.value)}
               placeholder="Paste System User access token"
-              className="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="flex-1 px-3 py-2 rounded-xl bg-neutral-950 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand"
             />
             <button
               type="button"
               onClick={connectWithToken}
               disabled={saving || tokenInput.trim().length < 20}
-              className="px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold disabled:opacity-40 whitespace-nowrap"
+              className="px-3.5 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink text-xs font-semibold disabled:opacity-40 whitespace-nowrap"
             >
               {saving ? "Verifying…" : "Connect"}
             </button>
@@ -119,27 +119,27 @@ export default function MetaConnectCard({ compact = false, onChange }: Props) {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-5 flex items-center gap-3 text-xs text-slate-400">
+      <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-5 flex items-center gap-3 text-xs text-neutral-400">
         <RefreshCw className="h-4 w-4 animate-spin" /> Checking Instagram & Meta connection…
       </div>
     );
   }
 
   return (
-    <div className={`rounded-2xl border ${ready ? "border-emerald-700/40" : "border-slate-800"} bg-[#0d1322] ${compact ? "p-4" : "p-6"} space-y-4`}>
+    <div className={`rounded-2xl border ${ready ? "border-emerald-700/40" : "border-neutral-800"} bg-[#131313] ${compact ? "p-4" : "p-6"} space-y-4`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex -space-x-2">
-            <span className="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-400 via-pink-500 to-purple-600 flex items-center justify-center ring-2 ring-[#0d1322]">
+            <span className="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-400 via-pink-500 to-purple-600 flex items-center justify-center ring-2 ring-[#131313]">
               <Instagram className="h-4.5 w-4.5 text-white" />
             </span>
-            <span className="h-9 w-9 rounded-xl bg-[#1877F2] flex items-center justify-center ring-2 ring-[#0d1322]">
+            <span className="h-9 w-9 rounded-xl bg-[#1877F2] flex items-center justify-center ring-2 ring-[#131313]">
               <Facebook className="h-4.5 w-4.5 text-white" />
             </span>
           </div>
           <div>
             <h3 className="text-sm font-semibold text-white">Instagram & Meta Ads</h3>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-neutral-400">
               {conn?.connected
                 ? `Connected as ${conn.user_name}${conn.kind === "system_user" ? " (Business System User)" : ""}`
                 : "Post to Instagram and run Meta ads from Possible Studio"}
@@ -161,11 +161,11 @@ export default function MetaConnectCard({ compact = false, onChange }: Props) {
           <p className="text-xs font-semibold text-amber-200 flex items-center gap-1.5">
             <AlertTriangle className="h-3.5 w-3.5" /> Meta app not set up yet
           </p>
-          <p className="text-[11px] text-slate-300">
+          <p className="text-[11px] text-neutral-300">
             Add <code className="text-amber-200">META_APP_ID</code> and <code className="text-amber-200">META_APP_SECRET</code> to{" "}
             <code>.env</code> and restart the API. In your Meta app, allow this redirect URI:
           </p>
-          <code className="block text-[11px] text-cyan-200 bg-slate-950 rounded-lg px-2.5 py-1.5 break-all">{conn.redirect_uri}</code>
+          <code className="block text-[11px] text-brand bg-neutral-950 rounded-lg px-2.5 py-1.5 break-all">{conn.redirect_uri}</code>
         </div>
       ) : !conn?.connected || conn.needs_reauth ? (
         <div className="space-y-3">
@@ -175,7 +175,7 @@ export default function MetaConnectCard({ compact = false, onChange }: Props) {
             </p>
           )}
           {!compact && (
-            <ul className="text-[11px] text-slate-400 space-y-1">
+            <ul className="text-[11px] text-neutral-400 space-y-1">
               <li>• Needs an Instagram Business or Creator account linked to a Facebook Page</li>
               <li>• Ads run from your own Meta ad account; you stay in control of spend</li>
               <li>• We never see your password; access can be removed any time</li>
@@ -184,7 +184,7 @@ export default function MetaConnectCard({ compact = false, onChange }: Props) {
           <button
             type="button"
             onClick={connect}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#1877F2] to-[#7c3aed] hover:opacity-95 text-white text-xs font-semibold shadow-lg shadow-blue-900/30 transition-all"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand hover:bg-brand-hover hover:opacity-95 text-brand-ink text-xs font-semibold shadow-lg shadow-brand/20 transition-all"
           >
             <Link2 className="h-4 w-4" />
             {conn?.needs_reauth ? "Reconnect Instagram & Meta" : "Connect Instagram & Meta"}
@@ -194,12 +194,12 @@ export default function MetaConnectCard({ compact = false, onChange }: Props) {
         <div className="space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label className="block">
-              <span className="text-[11px] text-slate-400 mb-1 block">Instagram account</span>
+              <span className="text-[11px] text-neutral-400 mb-1 block">Instagram account</span>
               <select
                 value={sel.page_id || ""}
                 disabled={saving}
                 onChange={(e) => select(e.target.value, sel.ad_account_id)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand"
               >
                 <option value="" disabled>
                   Choose a Page with Instagram
@@ -212,12 +212,12 @@ export default function MetaConnectCard({ compact = false, onChange }: Props) {
               </select>
             </label>
             <label className="block">
-              <span className="text-[11px] text-slate-400 mb-1 block">Ad account</span>
+              <span className="text-[11px] text-neutral-400 mb-1 block">Ad account</span>
               <select
                 value={sel.ad_account_id || ""}
                 disabled={saving || !sel.page_id}
                 onChange={(e) => sel.page_id && select(sel.page_id, e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500 disabled:opacity-50"
+                className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand disabled:opacity-50"
               >
                 <option value="" disabled>
                   Choose an ad account
@@ -239,7 +239,7 @@ export default function MetaConnectCard({ compact = false, onChange }: Props) {
             ) : (
               <span className="text-amber-300">Pick an Instagram account and an ad account</span>
             )}
-            <button type="button" onClick={disconnect} disabled={saving} className="text-slate-500 hover:text-rose-400 flex items-center gap-1">
+            <button type="button" onClick={disconnect} disabled={saving} className="text-neutral-500 hover:text-rose-400 flex items-center gap-1">
               <LogOut className="h-3 w-3" /> Disconnect
             </button>
           </div>

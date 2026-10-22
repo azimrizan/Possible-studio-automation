@@ -247,6 +247,108 @@ async def handle_activate(args: Dict[str, Any], ctx: TenantContext) -> Dict[str,
     return {"campaign_id": args["campaign_id"], "status": "ACTIVE", "mock": bool(getattr(graph, "mock", False))}
 
 
+# ---- reporting -----------------------------------------------------------------
+
+DATE_PRESETS = {"today", "yesterday", "last_7d", "last_30d", "maximum"}
+# What counts as a "result" for each objective, in order of preference (first action type Meta reports wins).
+RESULT_ACTIONS = {
+    "OUTCOME_ENGAGEMENT": ("post_engagement",),
+    "OUTCOME_TRAFFIC": ("link_click",),
+    "OUTCOME_LEADS": ("lead", "offsite_conversion.fb_pixel_lead", "onsite_conversion.lead_grouped"),
+    "OUTCOME_SALES": ("purchase", "offsite_conversion.fb_pixel_purchase", "omni_purchase"),
+}
+RESULT_LABELS = {
+    "OUTCOME_AWARENESS": "People reached",
+    "OUTCOME_ENGAGEMENT": "Post engagements",
+    "OUTCOME_TRAFFIC": "Link clicks",
+    "OUTCOME_LEADS": "Leads",
+    "OUTCOME_SALES": "Purchases",
+}
+INSIGHT_FIELDS = "spend,impressions,reach,frequency,clicks,inline_link_clicks,ctr,cpc,cpm,actions,purchase_roas"
+
+
+def _num(value: Any) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _results(row: Dict[str, Any], objective: str) -> float:
+    if objective == "OUTCOME_AWARENESS":
+        return _num(row.get("reach"))
+    actions = {a.get("action_type"): _num(a.get("value")) for a in row.get("actions") or []}
+    for action_type in RESULT_ACTIONS.get(objective, ()):
+        if action_type in actions:
+            return actions[action_type]
+    return 0.0
+
+
+def _summarise(row: Dict[str, Any], objective: str) -> Dict[str, Any]:
+    spend, results = _num(row.get("spend")), _results(row, objective)
+    roas = row.get("purchase_roas") or []
+    return {
+        "spend": spend,
+        "impressions": int(_num(row.get("impressions"))),
+        "reach": int(_num(row.get("reach"))),
+        "frequency": _num(row.get("frequency")),
+        "clicks": int(_num(row.get("clicks"))),
+        "link_clicks": int(_num(row.get("inline_link_clicks"))),
+        "ctr": _num(row.get("ctr")),
+        "cpc": _num(row.get("cpc")),
+        "cpm": _num(row.get("cpm")),
+        "results": results,
+        "cost_per_result": spend / results if results else None,
+        "roas": _num(roas[0].get("value")) if roas else None,
+    }
+
+
+async def handle_insights(args: Dict[str, Any], ctx: TenantContext) -> Dict[str, Any]:
+    """Campaign totals, a daily series and a per-ad breakdown, plus delivery status and any ad issues."""
+    graph = await _graph(ctx)
+    cid, objective = args["campaign_id"], args.get("objective", "")
+    preset = args.get("date_preset") if args.get("date_preset") in DATE_PRESETS else "maximum"
+
+    campaign = await graph.request("GET", cid, {"fields": "effective_status"})
+    total = await graph.request("GET", f"{cid}/insights", {"fields": INSIGHT_FIELDS, "date_preset": preset})
+    daily = await graph.request("GET", f"{cid}/insights", {
+        "fields": "spend,impressions,clicks,reach,actions", "date_preset": preset, "time_increment": 1, "limit": 100,
+    })
+    per_ad = await graph.request("GET", f"{cid}/insights", {
+        "fields": "ad_id,ad_name," + INSIGHT_FIELDS, "date_preset": preset, "level": "ad", "limit": 50,
+    })
+    ads = await graph.request("GET", f"{cid}/ads", {"fields": "id,name,effective_status,issues_info", "limit": 50})
+
+    ad_rows = {r.get("ad_id"): r for r in per_ad.get("data", [])}
+    return {
+        "date_preset": preset,
+        "objective": objective,
+        "result_label": RESULT_LABELS.get(objective, "Results"),
+        "status": campaign.get("effective_status", ""),
+        "totals": _summarise((total.get("data") or [{}])[0], objective),
+        "daily": [
+            {"date": r.get("date_start", ""), "spend": _num(r.get("spend")), "impressions": int(_num(r.get("impressions"))),
+             "clicks": int(_num(r.get("clicks"))), "results": _results(r, objective)}
+            for r in daily.get("data", [])
+        ],
+        "ads": [
+            {"id": a["id"], "name": a.get("name", ""), "status": a.get("effective_status", ""),
+             "issues": [i.get("error_message") or i.get("error_summary", "") for i in a.get("issues_info") or []],
+             **_summarise(ad_rows.get(a["id"], {}), objective)}
+            for a in ads.get("data", [])
+        ],
+        "mock": bool(getattr(graph, "mock", False)),
+    }
+
+
+server.register_tool(
+    name="ads.insights",
+    description="Read-only performance for a campaign: totals, daily series, per-ad breakdown and delivery status.",
+    handler=handle_insights,
+    parameters_schema={"type": "object", "properties": {"campaign_id": {"type": "string"}, "objective": {"type": "string"},
+                                                         "date_preset": {"type": "string"}}, "required": ["campaign_id"]},
+    risk_class=RiskClass.READ,
+)
 server.register_tool(
     name="ads.targeting_search",
     description="Find real Meta interest IDs (type=interest) or city location keys (type=city) with audience sizes.",

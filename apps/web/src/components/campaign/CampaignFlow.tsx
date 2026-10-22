@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { CTA_LABELS, MetaConnection, OBJECTIVE_LABELS, formatCompact, studioFetch } from "@/lib/studio";
 import MetaConnectCard from "./MetaConnectCard";
+import CampaignPerformance from "./CampaignPerformance";
 
 interface Props {
   campaignId: string;
@@ -48,8 +49,8 @@ const currencySymbol = (c: string) => ({ INR: "₹", USD: "$", EUR: "€", GBP: 
 function Why({ text }: { text?: string }) {
   if (!text) return null;
   return (
-    <p className="text-[11px] text-indigo-200/70 mt-1.5 flex gap-1.5 leading-relaxed">
-      <Sparkles className="h-3 w-3 mt-0.5 shrink-0 text-indigo-300" />
+    <p className="text-[11px] text-brand/70 mt-1.5 flex gap-1.5 leading-relaxed">
+      <Sparkles className="h-3 w-3 mt-0.5 shrink-0 text-brand" />
       <span>{text}</span>
     </p>
   );
@@ -58,8 +59,8 @@ function Why({ text }: { text?: string }) {
 function Field({ label, icon: Icon, children }: { label: string; icon: any; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
-        <Icon className="h-3.5 w-3.5 text-slate-500" /> {label}
+      <label className="text-[11px] font-medium text-neutral-400 flex items-center gap-1.5">
+        <Icon className="h-3.5 w-3.5 text-neutral-500" /> {label}
       </label>
       {children}
     </div>
@@ -68,15 +69,15 @@ function Field({ label, icon: Icon, children }: { label: string; icon: any; chil
 
 function RobotStage({ src, title, subtitle, children, pulse }: { src: string; title: string; subtitle?: string; children?: React.ReactNode; pulse?: boolean }) {
   return (
-    <div className="relative rounded-3xl border border-indigo-500/25 bg-[#070b1a] overflow-hidden px-6 py-10 sm:py-12 text-center">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.18),transparent_65%)] pointer-events-none" />
+    <div className="relative rounded-3xl border border-brand/25 bg-[#0b0b0b] overflow-hidden px-6 py-10 sm:py-12 text-center">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(128,207,174,0.18),transparent_65%)] pointer-events-none" />
       <img
         src={src}
         alt=""
         className={`relative mx-auto h-52 sm:h-64 w-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)] ${pulse ? "animate-robot-zoom" : ""}`}
       />
       <h3 className="relative mt-6 text-xl sm:text-2xl font-bold text-white">{title}</h3>
-      {subtitle && <p className="relative mt-2 text-sm text-slate-400 max-w-lg mx-auto">{subtitle}</p>}
+      {subtitle && <p className="relative mt-2 text-sm text-neutral-400 max-w-lg mx-auto">{subtitle}</p>}
       {children && <div className="relative mt-6">{children}</div>}
     </div>
   );
@@ -259,15 +260,15 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                   done
                     ? "bg-emerald-500/20 border-emerald-500/60 text-emerald-300"
                     : active
-                    ? "bg-gradient-to-br from-indigo-500 to-purple-600 border-transparent text-white shadow-lg shadow-indigo-600/40"
-                    : "border-slate-700 text-slate-500"
+                    ? "bg-brand hover:bg-brand-hover border-transparent text-brand-ink shadow-lg shadow-brand/20"
+                    : "border-neutral-700 text-neutral-500"
                 }`}
               >
                 {done ? <Check className="h-4 w-4" /> : n}
               </span>
-              <span className={`text-xs hidden sm:inline ${active ? "text-white font-semibold" : "text-slate-500"}`}>{label}</span>
+              <span className={`text-xs hidden sm:inline ${active ? "text-white font-semibold" : "text-neutral-500"}`}>{label}</span>
             </div>
-            {n < 3 && <div className={`h-px w-6 sm:w-12 ${done ? "bg-emerald-500/50" : "bg-slate-700"}`} />}
+            {n < 3 && <div className={`h-px w-6 sm:w-12 ${done ? "bg-emerald-500/50" : "bg-neutral-700"}`} />}
           </React.Fragment>
         );
       })}
@@ -279,7 +280,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
       <div className="flex items-center gap-4">
         <button
           onClick={onBack}
-          className="h-10 w-10 rounded-full border border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-slate-300 flex items-center justify-center"
+          className="h-10 w-10 rounded-full border border-neutral-700 bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 flex items-center justify-center"
           title="Back"
         >
           <ArrowLeft className="h-4.5 w-4.5" />
@@ -294,9 +295,9 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
               ? "Review & approve"
               : "Campaign settings"}
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-neutral-400 mt-0.5">
             {status === "live" || status === "done"
-              ? "Everything is published. Track results in Meta Ads Manager."
+              ? "Everything is published. Live results from Meta are below."
               : inProgress
               ? "Your AI team is posting and setting up ads."
               : "Planned by your Meta strategist agent. Everything is editable."}
@@ -320,7 +321,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
   const CreativeThumbs = ({ size = "md" }: { size?: "md" | "sm" }) => (
     <div className={`grid ${size === "md" ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-4"} gap-3`}>
       {campaign.creatives.map((c: any, i: number) => (
-        <div key={c.asset_id} className={`relative ${size === "md" ? "aspect-[4/5]" : "aspect-square"} rounded-xl overflow-hidden border border-slate-700 bg-slate-950`}>
+        <div key={c.asset_id} className={`relative ${size === "md" ? "aspect-[4/5]" : "aspect-square"} rounded-xl overflow-hidden border border-neutral-700 bg-neutral-950`}>
           {c.kind === "video" ? (
             <video src={c.url} className="h-full w-full object-cover" muted playsInline loop autoPlay />
           ) : (
@@ -339,7 +340,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
     return (
       <div className="max-w-6xl mx-auto space-y-6">
         {ErrorBar || (
-          <div className="text-xs text-slate-400 flex items-center gap-2">
+          <div className="text-xs text-neutral-400 flex items-center gap-2">
             <RefreshCw className="h-4 w-4 animate-spin" /> Loading campaign…
           </div>
         )}
@@ -360,13 +361,13 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
         >
           <div className="max-w-sm mx-auto space-y-2 text-left">
             {PLANNING_STEPS.map((s, i) => (
-              <div key={s} className={`flex items-center gap-2.5 text-xs transition-all ${i <= planStep ? "text-slate-200" : "text-slate-600"}`}>
+              <div key={s} className={`flex items-center gap-2.5 text-xs transition-all ${i <= planStep ? "text-neutral-200" : "text-neutral-600"}`}>
                 {i < planStep ? (
                   <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 ) : i === planStep ? (
-                  <RefreshCw className="h-4 w-4 text-indigo-300 animate-spin" />
+                  <RefreshCw className="h-4 w-4 text-brand animate-spin" />
                 ) : (
-                  <span className="h-4 w-4 rounded-full border border-slate-700" />
+                  <span className="h-4 w-4 rounded-full border border-neutral-700" />
                 )}
                 {s}
               </div>
@@ -383,11 +384,11 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
       <div className="max-w-6xl mx-auto space-y-6">
         {Header}
         {ErrorBar}
-        <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-10 text-center space-y-4">
+        <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-10 text-center space-y-4">
           <AlertTriangle className="h-8 w-8 text-amber-400 mx-auto" />
           <p className="text-sm text-white font-semibold">The strategist could not finish</p>
-          <p className="text-xs text-slate-400">{campaign.error || "Try again in a moment."}</p>
-          <button onClick={() => runStrategy()} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold">
+          <p className="text-xs text-neutral-400">{campaign.error || "Try again in a moment."}</p>
+          <button onClick={() => runStrategy()} className="px-5 py-2.5 rounded-xl bg-brand text-brand-ink text-xs font-semibold">
             Try again
           </button>
         </div>
@@ -405,12 +406,12 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
     let stageView: React.ReactNode;
     if (status === "failed") {
       stageView = (
-        <div className="rounded-3xl border border-rose-800/50 bg-[#0d1322] p-10 text-center space-y-4">
+        <div className="rounded-3xl border border-rose-800/50 bg-[#131313] p-10 text-center space-y-4">
           <AlertTriangle className="h-10 w-10 text-rose-400 mx-auto" />
           <h3 className="text-lg font-bold text-white">Something needs your attention</h3>
-          <p className="text-xs text-slate-300 max-w-lg mx-auto">{campaign.error}</p>
-          <p className="text-[11px] text-slate-500">Retrying is safe: anything already posted will not be posted twice.</p>
-          <button onClick={approve} disabled={busy === "approve"} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold">
+          <p className="text-xs text-neutral-300 max-w-lg mx-auto">{campaign.error}</p>
+          <p className="text-[11px] text-neutral-500">Retrying is safe: anything already posted will not be posted twice.</p>
+          <button onClick={approve} disabled={busy === "approve"} className="px-5 py-2.5 rounded-xl bg-brand text-brand-ink text-xs font-semibold">
             {busy === "approve" ? "Retrying…" : "Retry"}
           </button>
         </div>
@@ -451,28 +452,28 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                 View post{handle ? ` on @${handle}` : ""} <ExternalLink className="h-3 w-3" />
               </a>
             )}
-            <div className="rounded-2xl border border-slate-700 bg-slate-900/70 p-4 grid grid-cols-3 gap-3 text-left">
+            <div className="rounded-2xl border border-neutral-700 bg-neutral-900/70 p-4 grid grid-cols-3 gap-3 text-left">
               <div>
-                <p className="text-[10px] text-slate-500 uppercase tracking-wide">Daily</p>
+                <p className="text-[10px] text-neutral-500 uppercase tracking-wide">Daily</p>
                 <p className="text-sm font-bold text-white">{sym}{plan.daily_budget}</p>
               </div>
               <div>
-                <p className="text-[10px] text-slate-500 uppercase tracking-wide">Duration</p>
+                <p className="text-[10px] text-neutral-500 uppercase tracking-wide">Duration</p>
                 <p className="text-sm font-bold text-white">{plan.duration_days} days</p>
               </div>
               <div>
-                <p className="text-[10px] text-slate-500 uppercase tracking-wide">Max total</p>
+                <p className="text-[10px] text-neutral-500 uppercase tracking-wide">Max total</p>
                 <p className="text-sm font-bold text-white">{sym}{Math.round(plan.daily_budget * plan.duration_days).toLocaleString()}</p>
               </div>
             </div>
             <button
               onClick={launch}
               disabled={busy === "launch"}
-              className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-[#1877F2] via-indigo-600 to-purple-600 text-white text-sm font-semibold shadow-lg shadow-indigo-700/40 flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full px-6 py-3 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink text-sm font-semibold shadow-lg shadow-brand/20 flex items-center justify-center gap-2 disabled:opacity-60"
             >
               <Rocket className="h-4 w-4" /> {busy === "launch" ? "Launching…" : "Launch ads"}
             </button>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-neutral-500">
               Spend starts at {new Date(plan.start_time_iso).toLocaleString()} ({plan.timezone}). You can pause anytime in Meta Ads Manager.
             </p>
           </div>
@@ -502,7 +503,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                 <BarChart3 className="h-3.5 w-3.5" /> Open in Ads Manager
               </a>
             )}
-            <button onClick={onBack} className="px-4 py-2 rounded-xl bg-slate-800 text-white text-xs font-semibold">
+            <button onClick={onBack} className="px-4 py-2 rounded-xl bg-neutral-800 text-white text-xs font-semibold">
               Back to dashboard
             </button>
           </div>
@@ -525,7 +526,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
         {ErrorBar}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-8">{stageView}</div>
-          <div className="lg:col-span-4 rounded-2xl border border-slate-800 bg-[#0d1322] p-5 space-y-4">
+          <div className="lg:col-span-4 rounded-2xl border border-neutral-800 bg-[#131313] p-5 space-y-4">
             <h3 className="text-sm font-semibold text-white">Progress</h3>
             {steps
               .filter((s) => !s.skip)
@@ -539,23 +540,26 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                         st === "done"
                           ? "bg-emerald-500/15 text-emerald-300"
                           : st === "running"
-                          ? "bg-indigo-500/15 text-indigo-300"
+                          ? "bg-brand/10 text-brand"
                           : st === "failed"
                           ? "bg-rose-500/15 text-rose-300"
-                          : "bg-slate-800 text-slate-500"
+                          : "bg-neutral-800 text-neutral-500"
                       }`}
                     >
                       {st === "running" ? <RefreshCw className="h-4 w-4 animate-spin" /> : st === "done" ? <Check className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
                     </span>
-                    <span className={`text-xs ${st === "done" ? "text-slate-200" : "text-slate-500"}`}>{s.label}</span>
+                    <span className={`text-xs ${st === "done" ? "text-neutral-200" : "text-neutral-500"}`}>{s.label}</span>
                   </div>
                 );
               })}
-            <div className="pt-3 border-t border-slate-800">
+            <div className="pt-3 border-t border-neutral-800">
               <CreativeThumbs size="sm" />
             </div>
           </div>
         </div>
+        {(status === "live" || status === "done") && (meta?.campaign_id || ig?.media_id) && (
+          <CampaignPerformance campaignId={campaignId} />
+        )}
       </div>
     );
   }
@@ -572,25 +576,25 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
         {ErrorBar}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-7 space-y-4">
-            <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-5 space-y-4">
+            <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-5 space-y-4">
               <h3 className="text-sm font-semibold text-white">What happens when you approve</h3>
-              <label className="flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-900/50 cursor-pointer">
+              <label className="flex items-start gap-3 p-3 rounded-xl border border-neutral-800 bg-neutral-900/50 cursor-pointer">
                 <input type="checkbox" checked={doPublish} onChange={(e) => setDoPublish(e.target.checked)} className="mt-0.5 accent-pink-500" />
                 <div>
                   <p className="text-xs font-semibold text-white flex items-center gap-1.5">
                     <Instagram className="h-3.5 w-3.5 text-pink-400" /> Post {campaign.creatives.length > 1 ? `a carousel of ${campaign.creatives.length}` : "the creative"} to{" "}
                     {handle ? `@${handle}` : "Instagram"}
                   </p>
-                  <p className="text-[11px] text-slate-400 mt-1 whitespace-pre-line line-clamp-3">{draft.caption}</p>
+                  <p className="text-[11px] text-neutral-400 mt-1 whitespace-pre-line line-clamp-3">{draft.caption}</p>
                 </div>
               </label>
-              <label className="flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-900/50 cursor-pointer">
+              <label className="flex items-start gap-3 p-3 rounded-xl border border-neutral-800 bg-neutral-900/50 cursor-pointer">
                 <input type="checkbox" checked={doAds} onChange={(e) => setDoAds(e.target.checked)} className="mt-0.5 accent-blue-500" />
                 <div>
                   <p className="text-xs font-semibold text-white flex items-center gap-1.5">
                     <Megaphone className="h-3.5 w-3.5 text-blue-400" /> Build the Meta campaign (paused, no spend yet)
                   </p>
-                  <p className="text-[11px] text-slate-400 mt-1">
+                  <p className="text-[11px] text-neutral-400 mt-1">
                     {OBJECTIVE_LABELS[plan.objective]} · {sym}
                     {plan.daily_budget}/day × {plan.duration_days} days · {where} · {aud.age_min}-{aud.age_max}
                     {aud.genders !== "all" ? ` · ${aud.genders}` : ""} · {plan.ads.length} ad{plan.ads.length > 1 ? "s" : ""}
@@ -598,15 +602,15 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                   </p>
                 </div>
               </label>
-              <div className="p-3 rounded-xl border border-slate-800 bg-slate-900/50 flex items-start gap-3">
-                <Rocket className="h-4 w-4 text-purple-300 mt-0.5" />
-                <p className="text-[11px] text-slate-400">
+              <div className="p-3 rounded-xl border border-neutral-800 bg-neutral-900/50 flex items-start gap-3">
+                <Rocket className="h-4 w-4 text-brand mt-0.5" />
+                <p className="text-[11px] text-neutral-400">
                   Ads only start spending after you press <span className="text-white font-semibold">Launch</span> on the next screen.
                 </p>
               </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-5 space-y-3">
+            <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-5 space-y-3">
               <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-emerald-400" /> Pre-launch checks
               </h3>
@@ -624,30 +628,30 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
             </div>
             {(doPublish || doAds) && <MetaConnectCard compact onChange={setConn} />}
           </div>
-          <div className="lg:col-span-5 rounded-2xl border border-slate-800 bg-[#0d1322] p-5 space-y-4">
+          <div className="lg:col-span-5 rounded-2xl border border-neutral-800 bg-[#131313] p-5 space-y-4">
             <h3 className="text-sm font-semibold text-white">Creatives</h3>
             <CreativeThumbs />
             {plan.ads.map((a: any) => (
-              <div key={a.creative_index} className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-                <p className="text-[10px] text-slate-500 mb-1">Ad for creative #{a.creative_index + 1}</p>
-                <p className="text-xs text-slate-200 line-clamp-3">{a.primary_text}</p>
+              <div key={a.creative_index} className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-3">
+                <p className="text-[10px] text-neutral-500 mb-1">Ad for creative #{a.creative_index + 1}</p>
+                <p className="text-xs text-neutral-200 line-clamp-3">{a.primary_text}</p>
                 <div className="mt-2 flex items-center justify-between">
                   <p className="text-xs font-semibold text-white truncate">{a.headline}</p>
-                  <span className="text-[10px] px-2 py-1 rounded-lg bg-slate-800 text-slate-200 shrink-0">{CTA_LABELS[a.cta] || a.cta}</span>
+                  <span className="text-[10px] px-2 py-1 rounded-lg bg-neutral-800 text-neutral-200 shrink-0">{CTA_LABELS[a.cta] || a.cta}</span>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="fixed bottom-4 left-4 sm:left-72 right-4 sm:right-8 z-40 bg-[#090d1a]/95 backdrop-blur-xl border border-slate-800/90 rounded-2xl p-4 shadow-2xl flex items-center justify-between gap-3">
-          <button onClick={() => setStage("settings")} className="px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-2">
+        <div className="fixed bottom-4 left-4 sm:left-72 right-4 sm:right-8 z-40 bg-[#0d0d0d]/95 backdrop-blur-xl border border-neutral-800/90 rounded-2xl p-4 shadow-2xl flex items-center justify-between gap-3">
+          <button onClick={() => setStage("settings")} className="px-4 py-2.5 rounded-xl border border-neutral-700 text-neutral-300 text-xs font-semibold flex items-center gap-2">
             <ArrowLeft className="h-4 w-4" /> Back to settings
           </button>
           <button
             onClick={approve}
             disabled={busy === "approve" || (!doPublish && !doAds) || (conn?.mode !== "mock" && !connReady)}
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink text-xs font-semibold shadow-lg shadow-brand/20 flex items-center gap-2 disabled:opacity-50"
           >
             {busy === "approve" ? <RefreshCw className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
             Approve & {doPublish ? "post" : "build ads"}
@@ -662,7 +666,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
   const r = strategy.rationale || {};
   const est = strategy.estimate || {};
   const inputCls =
-    "w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors";
+    "w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white focus:outline-none focus:border-brand transition-colors";
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-32">
@@ -671,12 +675,12 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: campaign details */}
         <div className="lg:col-span-7 space-y-5">
-          <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-5 sm:p-6 space-y-5">
+          <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-5 sm:p-6 space-y-5">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                <Target className="h-4 w-4 text-indigo-400" /> Campaign details
+                <Target className="h-4 w-4 text-brand" /> Campaign details
               </h3>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand/10 text-brand border border-brand/30">
                 Advantage+ campaign
               </span>
             </div>
@@ -709,7 +713,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label={`Daily budget (${currency})`} icon={Wallet}>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400">{sym}</span>
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-neutral-400">{sym}</span>
                   <input
                     type="number"
                     min={1}
@@ -730,7 +734,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                   onChange={(e) => setDraft({ ...draft, start_local: e.target.value })}
                   className={inputCls}
                 />
-                <p className="text-[11px] text-slate-500">{plan.timezone}</p>
+                <p className="text-[11px] text-neutral-500">{plan.timezone}</p>
               </Field>
             </div>
             <Why text={r.budget} />
@@ -744,8 +748,8 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                     onClick={() => setDraft({ ...draft, duration_days: d })}
                     className={`px-3.5 py-2 rounded-xl text-xs font-medium border transition-all ${
                       Number(draft.duration_days) === d
-                        ? "bg-indigo-600/30 border-indigo-500 text-white"
-                        : "border-slate-700 text-slate-400 hover:text-white"
+                        ? "bg-brand/15 border-brand text-white"
+                        : "border-neutral-700 text-neutral-400 hover:text-white"
                     }`}
                   >
                     {d} days
@@ -757,21 +761,21 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                   max={90}
                   value={draft.duration_days}
                   onChange={(e) => setDraft({ ...draft, duration_days: e.target.value })}
-                  className="w-20 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"
+                  className="w-20 px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-xs text-white"
                 />
               </div>
             </Field>
             <Why text={r.schedule} />
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-5 sm:p-6 space-y-5">
+          <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-5 sm:p-6 space-y-5">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-              <Users className="h-4 w-4 text-cyan-400" /> Audience
+              <Users className="h-4 w-4 text-brand" /> Audience
             </h3>
             <Field label="Locations" icon={MapPin}>
               <div className="flex flex-wrap gap-2">
                 {[...aud.cities.map((c: any) => `${c.name}${c.region ? `, ${c.region}` : ""}`), ...aud.countries].map((l: string) => (
-                  <span key={l} className="px-2.5 py-1 rounded-lg bg-slate-800 text-xs text-slate-200">
+                  <span key={l} className="px-2.5 py-1 rounded-lg bg-neutral-800 text-xs text-neutral-200">
                     {l}
                   </span>
                 ))}
@@ -795,22 +799,22 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
             <Field label="Interest signals (verified with Meta)" icon={Sparkles}>
               <div className="flex flex-wrap gap-2">
                 {aud.interests.filter((i: any) => !draft.removed.includes(i.id)).length === 0 && (
-                  <span className="text-[11px] text-slate-500">Broad audience (Meta finds the right people)</span>
+                  <span className="text-[11px] text-neutral-500">Broad audience (Meta finds the right people)</span>
                 )}
                 {aud.interests
                   .filter((i: any) => !draft.removed.includes(i.id))
                   .map((i: any) => (
-                    <span key={i.id} className="pl-2.5 pr-1.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-xs text-cyan-100 flex items-center gap-1.5">
+                    <span key={i.id} className="pl-2.5 pr-1.5 py-1 rounded-lg bg-brand/10 border border-brand/30 text-xs text-brand flex items-center gap-1.5">
                       {i.name}
-                      {i.size_lower ? <span className="text-[10px] text-cyan-300/70">{formatCompact(i.size_lower)}+</span> : null}
-                      <button type="button" onClick={() => setDraft({ ...draft, removed: [...draft.removed, i.id] })} className="text-cyan-300/60 hover:text-rose-300">
+                      {i.size_lower ? <span className="text-[10px] text-brand/70">{formatCompact(i.size_lower)}+</span> : null}
+                      <button type="button" onClick={() => setDraft({ ...draft, removed: [...draft.removed, i.id] })} className="text-brand/60 hover:text-rose-300">
                         <X className="h-3 w-3" />
                       </button>
                     </span>
                   ))}
               </div>
               {aud.advantage_audience && (
-                <p className="text-[11px] text-slate-500 mt-1">Advantage+ audience is on: interests guide Meta, which can reach beyond them when it finds better results.</p>
+                <p className="text-[11px] text-neutral-500 mt-1">Advantage+ audience is on: interests guide Meta, which can reach beyond them when it finds better results.</p>
               )}
             </Field>
             <Why text={r.audience} />
@@ -819,19 +823,19 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
 
         {/* Right: creatives, copy, insights */}
         <div className="lg:col-span-5 space-y-5">
-          <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-5 space-y-4">
+          <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-white">Selected creatives ({campaign.creatives.length})</h3>
-              <span className="text-[10px] text-slate-500">{plan.delivery === "boost_instagram_post" ? "Promotes your Instagram post" : "Link ads"}</span>
+              <span className="text-[10px] text-neutral-500">{plan.delivery === "boost_instagram_post" ? "Promotes your Instagram post" : "Link ads"}</span>
             </div>
             <CreativeThumbs />
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-5 space-y-4">
+          <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-5 space-y-4">
             <h3 className="text-sm font-semibold text-white">Ad copy</h3>
             {draft.ads.map((a: any, i: number) => (
-              <div key={a.creative_index} className="space-y-2 rounded-xl border border-slate-800 bg-slate-900/50 p-3">
-                <p className="text-[10px] text-slate-500">Creative #{a.creative_index + 1}</p>
+              <div key={a.creative_index} className="space-y-2 rounded-xl border border-neutral-800 bg-neutral-900/50 p-3">
+                <p className="text-[10px] text-neutral-500">Creative #{a.creative_index + 1}</p>
                 <textarea
                   rows={3}
                   value={a.primary_text}
@@ -853,7 +857,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                     className={inputCls}
                     maxLength={60}
                   />
-                  <span className="px-3 py-2 rounded-xl bg-slate-800 text-[11px] text-slate-200 whitespace-nowrap flex items-center">
+                  <span className="px-3 py-2 rounded-xl bg-neutral-800 text-[11px] text-neutral-200 whitespace-nowrap flex items-center">
                     {CTA_LABELS[a.cta] || a.cta}
                   </span>
                 </div>
@@ -864,7 +868,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
             </Field>
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-5 space-y-3">
+          <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-5 space-y-3">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
               <BarChart3 className="h-4 w-4 text-emerald-400" /> Estimated audience
             </h3>
@@ -872,37 +876,37 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
               <>
                 <p className="text-2xl font-bold text-white">
                   {formatCompact(est.audience_lower)} – {formatCompact(est.audience_upper)}
-                  <span className="text-xs font-normal text-slate-400"> people</span>
+                  <span className="text-xs font-normal text-neutral-400"> people</span>
                 </p>
-                <p className="text-[11px] text-slate-500">Meta's own estimate for this targeting{est.mock ? " (demo data)" : ""}. Estimates are not guarantees.</p>
+                <p className="text-[11px] text-neutral-500">Meta's own estimate for this targeting{est.mock ? " (demo data)" : ""}. Estimates are not guarantees.</p>
               </>
             ) : (
-              <p className="text-[11px] text-slate-500">Connect Instagram & Meta to get Meta's audience estimate.</p>
+              <p className="text-[11px] text-neutral-500">Connect Instagram & Meta to get Meta's audience estimate.</p>
             )}
             {(strategy.kpis || []).length > 0 && (
               <div className="pt-2 space-y-1.5">
-                <p className="text-[11px] font-semibold text-slate-300">What we'll watch</p>
+                <p className="text-[11px] font-semibold text-neutral-300">What we'll watch</p>
                 {strategy.kpis.map((k: any, i: number) => (
-                  <p key={i} className="text-[11px] text-slate-400">
-                    <span className="text-slate-200">{k.metric}:</span> {k.expectation}
+                  <p key={i} className="text-[11px] text-neutral-400">
+                    <span className="text-neutral-200">{k.metric}:</span> {k.expectation}
                   </p>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-[#0d1322] p-5 space-y-3">
+          <div className="rounded-2xl border border-neutral-800 bg-[#131313] p-5 space-y-3">
             <h3 className="text-sm font-semibold text-white flex items-center gap-2">
               <Lightbulb className="h-4 w-4 text-amber-300" /> Market research
             </h3>
-            <p className="text-xs text-slate-300 leading-relaxed">{strategy.research?.summary}</p>
+            <p className="text-xs text-neutral-300 leading-relaxed">{strategy.research?.summary}</p>
             {(strategy.research?.sources || []).slice(0, 5).map((s: any, i: number) => (
-              <a key={i} href={s.url} target="_blank" rel="noreferrer" className="block text-[11px] text-indigo-300 hover:underline truncate">
+              <a key={i} href={s.url} target="_blank" rel="noreferrer" className="block text-[11px] text-brand hover:underline truncate">
                 {s.title || s.url}
               </a>
             ))}
             {strategy.research?.web_search === "not configured" && (
-              <p className="text-[11px] text-slate-500">Web research is off: add TAVILY_API_KEY (free tier) for competitor & trend research.</p>
+              <p className="text-[11px] text-neutral-500">Web research is off: add TAVILY_API_KEY (free tier) for competitor & trend research.</p>
             )}
             {[...(strategy.warnings || []), ...(strategy.risks || [])].length > 0 && (
               <div className="pt-2 space-y-1.5">
@@ -912,7 +916,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
                   </p>
                 ))}
                 {(strategy.risks || []).map((w: string, i: number) => (
-                  <p key={`r${i}`} className="text-[11px] text-slate-400">• {w}</p>
+                  <p key={`r${i}`} className="text-[11px] text-neutral-400">• {w}</p>
                 ))}
               </div>
             )}
@@ -920,9 +924,9 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
 
           <MetaConnectCard compact onChange={setConn} />
 
-          <div className="rounded-2xl border border-indigo-500/30 bg-indigo-950/20 p-4 space-y-2">
+          <div className="rounded-2xl border border-brand/30 bg-brand/5 p-4 space-y-2">
             <p className="text-xs font-semibold text-white flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-indigo-300" /> Ask the strategist to change the plan
+              <Sparkles className="h-3.5 w-3.5 text-brand" /> Ask the strategist to change the plan
             </p>
             <div className="flex gap-2">
               <input
@@ -935,7 +939,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
               <button
                 onClick={() => runStrategy(instruction)}
                 disabled={!instruction.trim()}
-                className="px-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold disabled:opacity-40 whitespace-nowrap"
+                className="px-3.5 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink text-xs font-semibold disabled:opacity-40 whitespace-nowrap"
               >
                 Re-plan
               </button>
@@ -944,8 +948,8 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
         </div>
       </div>
 
-      <div className="fixed bottom-4 left-4 sm:left-72 right-4 sm:right-8 z-40 bg-[#090d1a]/95 backdrop-blur-xl border border-slate-800/90 rounded-2xl p-4 shadow-2xl flex items-center justify-between gap-3">
-        <button onClick={onBack} className="px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-2">
+      <div className="fixed bottom-4 left-4 sm:left-72 right-4 sm:right-8 z-40 bg-[#0d0d0d]/95 backdrop-blur-xl border border-neutral-800/90 rounded-2xl p-4 shadow-2xl flex items-center justify-between gap-3">
+        <button onClick={onBack} className="px-4 py-2.5 rounded-xl border border-neutral-700 text-neutral-300 text-xs font-semibold flex items-center gap-2">
           <ArrowLeft className="h-4 w-4" /> Back to creatives
         </button>
         <button
@@ -953,7 +957,7 @@ export default function CampaignFlow({ campaignId, onBack }: Props) {
             if (await savePlan()) setStage("review");
           }}
           disabled={busy === "save"}
-          className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 flex items-center gap-2 disabled:opacity-60"
+          className="px-6 py-2.5 rounded-xl bg-brand hover:bg-brand-hover text-brand-ink text-xs font-semibold shadow-lg shadow-brand/20 flex items-center gap-2 disabled:opacity-60"
         >
           {busy === "save" ? "Saving…" : "Save settings & continue"} <ArrowRight className="h-4 w-4" />
         </button>
